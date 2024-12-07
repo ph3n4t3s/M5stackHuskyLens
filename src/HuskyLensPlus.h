@@ -29,5 +29,7 @@ private:
     void handleGestures();
     void handleDistance();
     void handleMultiObject();
+    void handleQRCode();
     float calculateDistance(int width, int height) const;
+    void manageQRLogFile() const;
 };

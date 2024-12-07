@@ -1,14 +1,24 @@
 #pragma once
 
 #include <vector>
+#include <map>
+#include <algorithm>
 #include "Config.h"
 #include <FastLED.h>
 
+// Les filtres sont stockés comme des matrices 3x3
 struct ImageFilter {
     String name;
     float kernel[3][3];
-    float factor;
-    float bias;
+    float factor; // Facteur de multiplication final
+    float bias;   // Valeur à ajouter aux résultats
+    
+    ImageFilter() : name(""), factor(1.0f), bias(0.0f) {
+        // Initialiser à un filtre identité par défaut
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                kernel[i][j] = (i == j) ? 1.0f : 0.0f;
+    }
     
     ImageFilter(const String& n, const float k[3][3], float f = 1.0f, float b = 0.0f)
         : name(n), factor(f), bias(b) {
@@ -16,21 +26,8 @@ struct ImageFilter {
     }
 };
 
-struct ImageEnhancement {
-    float brightness;
-    float contrast;
-    float saturation;
-    float sharpness;
-    bool nightMode;
-    
-    ImageEnhancement()
-        : brightness(1.0f), contrast(1.0f), saturation(1.0f),
-          sharpness(1.0f), nightMode(false) {}
-};
-
 class ImageProcessor {
 public:
-    ImageProcessor();
     bool begin();
     
     // Filtres et effets
@@ -39,54 +36,29 @@ public:
                         float factor = 1.0f, float bias = 0.0f);
     void removeFilter(const String& name);
     
-    // Améliorations d'image
-    void setEnhancement(const ImageEnhancement& enhancement);
-    void enableNightMode(bool enable);
-    void setAutoEnhance(bool enable);
-    
-    // Traitement d'image
-    void processImage(SensorData& data);
-    void applyMotionStabilization(bool enable);
-    void setDenoiseLevel(int level);
-    
-    // Analyse d'image
-    float calculateBlurriness();
-    float calculateBrightness();
-    std::vector<Point> detectEdges();
-    std::vector<std::vector<Point>> detectContours();
-    
     // Configuration
-    void saveSettings(const String& filename);
-    bool loadSettings(const String& filename);
+    void setDenoiseLevel(int level);
+    void applyMotionStabilization(bool enable);
     std::vector<String> getAvailableFilters() const;
+    std::vector<Point> detectHarrisCorners() const;
     
+    // Traitement principal
+    void processImage(SensorData& data);
+
 private:
-    std::map<String, ImageFilter> filters;
-    ImageEnhancement currentEnhancement;
-    bool autoEnhance;
-    bool motionStabilization;
     int denoiseLevel;
+    bool motionStabilization;
+    std::map<String, ImageFilter> filters;
+    std::vector<uint8_t> processedImage;
     
     // Filtres prédéfinis
     void setupDefaultFilters();
-    std::vector<uint8_t> originalImage;
-    std::vector<uint8_t> processedImage;
-    
-    // Fonctions de traitement
     void applyKernel(const float kernel[3][3], float factor, float bias);
-    void adjustBrightness(float value);
-    void adjustContrast(float value);
-    void adjustSaturation(float value);
-    void applySharpening(float amount);
-    void denoise();
     void stabilizeMotion();
-    void enhanceNightVision();
-    void autoAdjustParameters();
-    
-    // Utilitaires
-    void updateHistogram();
-    float calculateLaplacianVariance();
-    std::vector<Point> detectHarrisCorners();
-    void convertToYUV();
-    void convertToRGB();
+    void denoise();
+
+    // Utilitaires de traitement d'image
+    float calculateBlurriness() const;
+    std::vector<Point> detectEdges() const;
+    std::vector<std::vector<Point>> detectContours() const;
 };

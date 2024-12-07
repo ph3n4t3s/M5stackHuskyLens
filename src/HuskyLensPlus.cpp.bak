@@ -62,35 +62,31 @@ void HuskyLensPlus::setMode(HuskyMode mode) {
 }
 
 void HuskyLensPlus::configureMode(HuskyMode mode) {
-    protocolAlgorithm algo;
     switch (mode) {
         case HuskyMode::FACE_RECOGNITION:
-            algo = ALGORITHM_FACE_RECOGNITION;
+            huskyLens.writeAlgorithm(ALGORITHM_FACE_RECOGNITION);
             break;
         case HuskyMode::OBJECT_TRACKING:
-            algo = ALGORITHM_OBJECT_TRACKING;
+            huskyLens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);
             break;
         case HuskyMode::LINE_TRACKING:
-            algo = ALGORITHM_LINE_TRACKING;
+            huskyLens.writeAlgorithm(ALGORITHM_LINE_TRACKING);
             break;
         case HuskyMode::COLOR_RECOGNITION:
-            algo = ALGORITHM_COLOR_RECOGNITION;
+            huskyLens.writeAlgorithm(ALGORITHM_COLOR_RECOGNITION);
             break;
         case HuskyMode::TAG_RECOGNITION:
-            algo = ALGORITHM_TAG_RECOGNITION;
+            huskyLens.writeAlgorithm(ALGORITHM_TAG_RECOGNITION);
             break;
         case HuskyMode::OBJECT_CLASSIFICATION:
-            algo = ALGORITHM_OBJECT_CLASSIFICATION;
+            huskyLens.writeAlgorithm(ALGORITHM_OBJECT_CLASSIFICATION);
             break;
         case HuskyMode::QR_CODE:
-        case HuskyMode::CUSTOM_CARDS:
-            algo = ALGORITHM_TAG_RECOGNITION;
+            huskyLens.writeAlgorithm(ALGORITHM_QR_CODE_RECOGNITION);
             break;
         default:
-            algo = ALGORITHM_OBJECT_TRACKING;
-            break;
+            huskyLens.writeAlgorithm(ALGORITHM_OBJECT_TRACKING);
     }
-    huskyLens.writeAlgorithm(algo);
 }
 
 SensorData HuskyLensPlus::getData() const {
@@ -110,15 +106,41 @@ void HuskyLensPlus::forget() {
 }
 
 void HuskyLensPlus::saveModel() {
-    // Envoi de la commande de sauvegarde via I2C
-    Wire.beginTransmission(0x32);
-    Wire.write(0x39);  // Commande de sauvegarde
-    if (Wire.endTransmission() == 0) {
-        Serial.println("Model saved to internal memory");
-        delay(1000);  // Attendre que la sauvegarde soit terminée
-    } else {
-        Serial.println("Error: Could not save model");
+    if (!SD.begin()) {
+        Serial.println("Erreur: impossible d'initialiser la carte SD");
+        return;
     }
+    
+    String filename = "/models/";
+    switch (currentMode) {
+        case HuskyMode::FACE_RECOGNITION:
+            filename += "face_";
+            break;
+        case HuskyMode::OBJECT_TRACKING:
+            filename += "object_";
+            break;
+        case HuskyMode::COLOR_RECOGNITION:
+            filename += "color_";
+            break;
+        default:
+            filename += "custom_";
+    }
+    filename += String(millis()) + ".model";
+    
+    File modelFile = SD.open(filename.c_str(), FILE_WRITE);
+    if (!modelFile) {
+        Serial.println("Erreur: impossible de créer le fichier modèle");
+        return;
+    }
+    
+    // Sauvegarder le modèle actuel via le protocole HuskyLens
+    if (huskyLens.saveModelToSDCard()) {
+        Serial.println("Modèle sauvegardé avec succès: " + filename);
+    } else {
+        Serial.println("Erreur lors de la sauvegarde du modèle");
+    }
+    
+    modelFile.close();
 }
 
 float HuskyLensPlus::calculateDistance(int width, int height) const {
@@ -188,6 +210,33 @@ void HuskyLensPlus::handleDistance() {
             if (currentData.labels.size() <= i) {
                 currentData.labels.push_back(info);
             } else {
+
+void HuskyLensPlus::handleQRCode() {
+    if (huskyLens.available()) {
+        HUSKYLENSResult result = huskyLens.readQRCode();
+        if (result.command == COMMAND_RETURN_OK) {
+            String qrData = result.data;
+            currentData.labels.push_back(qrData);
+            
+            // Ajouter des métadonnées si disponibles
+            if (currentData.points.size() > 0) {
+                Point center = currentData.points.back();
+                String pos = String(center.x) + "," + String(center.y);
+                currentData.labels.push_back("Pos: " + pos);
+            }
+            
+            // Sauvegarder l'historique des QR codes
+            if (SD.begin()) {
+                File logFile = SD.open("/qr_log.txt", FILE_APPEND);
+                if (logFile) {
+                    String logEntry = String(millis()) + "," + qrData + "\n";
+                    logFile.print(logEntry);
+                    logFile.close();
+                }
+            }
+        }
+    }
+}
                 currentData.labels[i] = info;
             }
         }
@@ -225,34 +274,6 @@ void HuskyLensPlus::handleMultiObject() {
     
     lastPositions = currentData.points;
     lastUpdateTime = millis();
-}
-
-void HuskyLensPlus::handleQRCode() {
-    if (huskyLens.available()) {
-        HUSKYLENSResult result = huskyLens.read();
-        if (result.command == COMMAND_RETURN_OK && result.ID > 0) {  // ID > 0 indique une détection valide
-            String qrData = String(result.ID);  // Pour l'instant, on utilise l'ID comme donnée
-            
-            // Ajouter des métadonnées
-            if (currentData.points.size() > 0) {
-                Point center = currentData.points.back();
-                String pos = String(center.x) + "," + String(center.y);
-                currentData.labels.push_back("Tag ID: " + qrData);
-                currentData.labels.push_back("Pos: " + pos);
-                
-                // Sauvegarder l'historique si la carte SD est disponible
-                if (SD.begin()) {
-                    manageQRLogFile();
-                    File logFile = SD.open(Constants::QR_LOG_FILE, FILE_APPEND);
-                    if (logFile) {
-                        String logEntry = String(millis()) + ",Tag:" + qrData + ",Pos:" + pos + "\n";
-                        logFile.print(logEntry);
-                        logFile.close();
-                    }
-                }
-            }
-        }
-    }
 }
 
 void HuskyLensPlus::manageQRLogFile() const {
@@ -298,5 +319,32 @@ void HuskyLensPlus::manageQRLogFile() const {
         // Remplacer l'ancien fichier
         SD.remove(Constants::QR_LOG_FILE);
         SD.rename("/temp_qr.txt", Constants::QR_LOG_FILE);
+    }
+}
+
+void HuskyLensPlus::handleQRCode() {
+    if (huskyLens.available()) {
+        HUSKYLENSResult result = huskyLens.readQRCode();
+        if (result.command == COMMAND_RETURN_OK) {
+            String qrData = result.data;
+            currentData.labels.push_back(qrData);
+            
+            // Ajouter des métadonnées si disponibles
+            if (currentData.points.size() > 0) {
+                Point center = currentData.points.back();
+                String pos = String(center.x) + "," + String(center.y);
+                currentData.labels.push_back("Pos: " + pos);
+            }
+            
+            // Sauvegarder l'historique des QR codes
+            if (SD.begin()) {
+                File logFile = SD.open("/qr_log.txt", FILE_APPEND);
+                if (logFile) {
+                    String logEntry = String(millis()) + "," + qrData + "\n";
+                    logFile.print(logEntry);
+                    logFile.close();
+                }
+            }
+        }
     }
 }

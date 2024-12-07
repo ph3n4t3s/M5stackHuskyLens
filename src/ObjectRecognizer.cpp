@@ -1,7 +1,10 @@
 #include "ObjectRecognizer.h"
+#include "GeometryUtils.h"
 #include <cmath>
 #include <algorithm>
 #include <SPIFFS.h>
+
+using namespace GeometryUtils;
 
 ObjectTemplate::ObjectTemplate(const String& n, const std::vector<Point>& c)
     : name(n), contour(c) {

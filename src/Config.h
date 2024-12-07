@@ -86,19 +86,21 @@ struct DisplayData {
 };
 
 // Énumérations
+#include "HUSKYLENS.h"
+
 enum class HuskyMode {
-    FACE_RECOGNITION,
-    OBJECT_TRACKING,
-    LINE_TRACKING,
-    COLOR_RECOGNITION,
-    TAG_RECOGNITION,
-    OBJECT_CLASSIFICATION,
-    QR_CODE,
-    CUSTOM_CARDS,
-    MOTION_TRACKING,
-    GESTURE_RECOGNITION,
-    DISTANCE_MEASUREMENT,
-    MULTI_OBJECT_FUSION
+    FACE_RECOGNITION = 0,
+    OBJECT_TRACKING = 1,
+    LINE_TRACKING = 2,
+    COLOR_RECOGNITION = 3,
+    TAG_RECOGNITION = 4,
+    OBJECT_CLASSIFICATION = 5,
+    QR_CODE = 6,
+    CUSTOM_CARDS = 7,
+    MOTION_TRACKING = 8,
+    GESTURE_RECOGNITION = 9,
+    DISTANCE_MEASUREMENT = 10,
+    MULTI_OBJECT_FUSION = 11
 };
 
 enum class DisplayMode {
@@ -118,6 +120,18 @@ namespace Constants {
     const int MAX_OBJECTS = 25;
     const int MENU_ITEMS = 6;
     const unsigned long LEARN_INTERVAL = 5000;
+
+    // QR Code constants
+    const int MAX_QR_DATA_LENGTH = 256;
+    const int MAX_QR_LOG_ENTRIES = 1000;
+    const int QR_MIN_CONFIDENCE = 75;
+    const String QR_LOG_FILE = "/qr_log.txt";
+    
+    // Model management constants
+    const int MAX_SAVED_MODELS = 20;
+    const String MODELS_DIRECTORY = "/models";
+    const String MODEL_FILE_EXTENSION = ".model";
+    const int MIN_MODEL_CONFIDENCE = 70;
     
     // Constantes d'affichage
     const int STATUS_BAR_HEIGHT = 20;
