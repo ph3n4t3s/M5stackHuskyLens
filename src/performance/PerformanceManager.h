@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <any>
 #include "Config.h"
 
 // Structure pour les statistiques de performance
@@ -18,6 +19,7 @@ struct PerformanceMetrics {
     uint32_t free_heap;
     uint32_t min_free_heap;
     float temperature;
+    uint64_t timestamp;
     
     PerformanceMetrics() :
         cpu_usage(0),
@@ -27,7 +29,8 @@ struct PerformanceMetrics {
         network_latency(0),
         free_heap(0),
         min_free_heap(0),
-        temperature(0) {}
+        temperature(0),
+        timestamp(0) {}
 };
 
 // Structure pour une tâche planifiée
@@ -140,6 +143,8 @@ private:
     
     // Méthodes internes
     static void monitoringTask(void* parameter);
+    int getOptimalCore(const String& taskName) const;
+    float calculateTaskCPUUsage(TaskHandle_t handle) const;
     void updateMetrics();
     void checkThresholds();
     void cleanupCache();

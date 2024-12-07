@@ -1,0 +1,8 @@
+struct SensorData {
+    std::vector<Point> points;
+    mutable std::vector<String> labels;  // Changé en mutable pour permettre la modification dans une méthode const
+    float confidence;
+    uint32_t timestamp;
+
+    SensorData() : confidence(0.0f), timestamp(0) {}
+};

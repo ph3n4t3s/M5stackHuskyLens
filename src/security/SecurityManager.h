@@ -7,10 +7,10 @@
 #include "Config.h"
 
 enum class SecurityLevel {
-    LOW,
-    MEDIUM,
-    HIGH,
-    CUSTOM
+    SEC_LOW,
+    SEC_MEDIUM,
+    SEC_HIGH,
+    SEC_CUSTOM
 };
 
 struct SecurityConfig {

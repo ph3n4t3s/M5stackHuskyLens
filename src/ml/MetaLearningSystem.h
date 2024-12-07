@@ -3,7 +3,11 @@
 #include <vector>
 #include <map>
 #include "../Config.h"
+#ifdef TENSORFLOW_LITE_DISABLE
+// TensorFlow temporairement désactivé
+#else
 #include <tensorflow/lite/micro/micro_interpreter.h>
+#endif
 
 // Structure pour un méta-modèle
 struct MetaModel {
@@ -111,12 +115,14 @@ private:
     std::map<String, LearningTask> m_tasks;
     std::vector<std::vector<float>> m_learning_curves;
     
+#ifndef TENSORFLOW_LITE_DISABLE
     // TensorFlow Lite
     std::unique_ptr<tflite::MicroInterpreter> m_interpreter;
     std::unique_ptr<tflite::ErrorReporter> m_error_reporter;
     const tflite::Model* m_model;
     TfLiteTensor* m_input_tensor;
     TfLiteTensor* m_output_tensor;
+#endif
     
     // Méta-apprentissage interne
     void innerLoop(MetaModel& model, const LearningTask& task);

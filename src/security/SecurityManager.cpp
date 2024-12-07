@@ -3,7 +3,7 @@
 #include <esp_random.h>
 #include <mbedtls/base64.h>
 
-SecurityManager::SecurityManager() : m_level(SecurityLevel::MEDIUM) {
+SecurityManager::SecurityManager() : m_level(SecurityLevel::SEC_MEDIUM) {
     mbedtls_aes_init(&m_aesCtx);
 }
 
@@ -23,19 +23,19 @@ void SecurityManager::setSecurityLevel(SecurityLevel level) {
     m_level = level;
     
     switch (level) {
-        case SecurityLevel::LOW:
+        case SecurityLevel::SEC_LOW:
             m_config.enableEncryption = false;
             m_config.enableAuthentication = false;
             m_config.keyRotationInterval = 7 * 24 * 3600;  // 7 jours
             break;
             
-        case SecurityLevel::MEDIUM:
+        case SecurityLevel::SEC_MEDIUM:
             m_config.enableEncryption = true;
             m_config.enableAuthentication = true;
             m_config.keyRotationInterval = 24 * 3600;      // 1 jour
             break;
             
-        case SecurityLevel::HIGH:
+        case SecurityLevel::SEC_HIGH:
             m_config.enableEncryption = true;
             m_config.enableAuthentication = true;
             m_config.enableSecureBootload = true;

@@ -1,0 +1,21 @@
+diff --git a/HUSKYLENS/HUSKYLENS.h b/HUSKYLENS/HUSKYLENS.h
+--- a/HUSKYLENS/HUSKYLENS.h
++++ b/HUSKYLENS/HUSKYLENS.h
+@@ -168,7 +168,7 @@ class HUSKYLENS
+         if(husky_lens_protocol_receive_buf[i]!=0xFF) return false;
+         Protocol_t protocolInfo = protocolDepack(husky_lens_protocol_receive_buf);
+         //Serial.println("protocolInfo.protocolSize = "+String(protocolInfo.protocolSize));
+-        protocolPtr = (Protocol_t*) realloc(protocolPtr, max(protocolInfo.protocolSize, 1) * sizeof(Protocol_t));
++        protocolPtr = (Protocol_t*) realloc(protocolPtr, std::max<int>(static_cast<int>(protocolInfo.protocolSize), 1) * sizeof(Protocol_t));
+         protocolPtr[count++] = protocolInfo;
+         return true;
+     }
+@@ -294,7 +294,7 @@ class HUSKYLENS {
+     int available() {
+         if (onlyProcessKnock) {
+             int result = count - currentIndex;
+-            currentIndex = min(currentIndex, result);
++            currentIndex = std::min<int>(static_cast<int>(currentIndex), result);
+             return result;
+         }
+         return knock() ? available() : 0;

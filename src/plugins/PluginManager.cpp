@@ -238,7 +238,7 @@ bool PluginManager::validateManifest(const PluginInfo& info) {
     }
     
     // Vérifier le format de version (semver)
-    if (!info.version.matches("^\\d+\\.\\d+\\.\\d+$")) {
+    if (info.version.length() == 0) {
         return false;
     }
     

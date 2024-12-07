@@ -101,7 +101,8 @@ void handleGestures(const SensorData& data) {
         if (!gesture.isEmpty()) {
             float confidence = gestureAnalyzer.getConfidence();
             logger.logDebug("Geste détecté: " + gesture + " (conf: " + String(confidence) + ")");
-            data.labels.push_back(gesture);
+            std::vector<String>& labels = const_cast<std::vector<String>&>(data.labels);
+            labels.push_back(gesture);
         }
     }
 }
@@ -298,7 +299,8 @@ void setup() {
 void handleObjectRecognition(SensorData& data) {
     std::vector<ObjectMatch> matches = objectRecognizer.recognizeObjects(data.points);
     for (const auto& match : matches) {
-        data.labels.push_back(match.name + " (" + String(match.confidence * 100, 0) + "%)");
+        std::vector<String>& labels = const_cast<std::vector<String>&>(data.labels);
+            labels.push_back(match.name + " (" + String(match.confidence * 100, 0) + "%)");
     }
 }
 
@@ -311,7 +313,8 @@ void handleMLPrediction(SensorData& data) {
         if (maxConf > 0.7f) {
             int classIndex = std::distance(predictions.begin(),
                 std::max_element(predictions.begin(), predictions.end()));
-            data.labels.push_back("Class " + String(classIndex) + " (" + String(maxConf * 100, 0) + "%)");
+            std::vector<String>& labels = const_cast<std::vector<String>&>(data.labels);
+            labels.push_back("Class " + String(classIndex) + " (" + String(maxConf * 100, 0) + "%)");
         }
     }
 }

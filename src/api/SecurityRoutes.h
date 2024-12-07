@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ESPAsyncWebServer.h>
+#include <SPIFFS.h>
 #include "../security/SecurityManager.h"
 
 class SecurityRoutes {

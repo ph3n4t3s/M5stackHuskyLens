@@ -3,8 +3,9 @@
 #include <vector>
 #include <map>
 #include "Config.h"
-#include <EloquentTinyML.h>
-#include <eloquent_tinyml/tensorflow.h>
+// TensorFlow support temporairement désactivé
+// #include <EloquentTinyML.h>
+// #include <eloquent_tinyml/tensorflow.h>
 
 struct MLModel {
     String name;

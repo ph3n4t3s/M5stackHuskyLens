@@ -102,10 +102,10 @@ void SecurityRoutes::handleUpdateSecurityLevel(AsyncWebServerRequest* request, S
     String level = request->getParam("level", true)->value();
     SecurityLevel secLevel;
     
-    if (level == "LOW") secLevel = SecurityLevel::LOW;
-    else if (level == "MEDIUM") secLevel = SecurityLevel::MEDIUM;
-    else if (level == "HIGH") secLevel = SecurityLevel::HIGH;
-    else if (level == "CUSTOM") secLevel = SecurityLevel::CUSTOM;
+    if (level == "LOW") secLevel = SecurityLevel::SEC_LOW;
+    else if (level == "MEDIUM") secLevel = SecurityLevel::SEC_MEDIUM;
+    else if (level == "HIGH") secLevel = SecurityLevel::SEC_HIGH;
+    else if (level == "CUSTOM") secLevel = SecurityLevel::SEC_CUSTOM;
     else {
         sendJsonResponse(request, false, "Niveau de sécurité invalide");
         return;

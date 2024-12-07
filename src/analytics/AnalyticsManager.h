@@ -3,8 +3,10 @@
 #include <vector>
 #include <deque>
 #include <map>
+#include <ArduinoJson.h>
 #include "../Config.h"
-#include <TensorFlowLite_ESP32.h>
+// TensorFlow support temporairement désactivé
+// #include <TensorFlowLite_ESP32.h>
 
 // Structure pour les métriques d'analyse
 struct AnalyticsMetrics {
@@ -147,15 +149,19 @@ private:
     bool m_analytics_running;
     SemaphoreHandle_t m_metrics_mutex;
     
-    // TensorFlow Lite
-    std::unique_ptr<tflite::MicroInterpreter> m_interpreter;
-    std::unique_ptr<tflite::ErrorReporter> m_error_reporter;
-    const tflite::Model* m_model;
-    TfLiteTensor* m_input_tensor;
-    TfLiteTensor* m_output_tensor;
+    // TensorFlow Lite (temporairement désactivé)
+    // std::unique_ptr<tflite::MicroInterpreter> m_interpreter;
+    // std::unique_ptr<tflite::ErrorReporter> m_error_reporter;
+    // const tflite::Model* m_model;
+    // TfLiteTensor* m_input_tensor;
+    // TfLiteTensor* m_output_tensor;
     
     // Méthodes internes
     void processMetrics();
+    int classifyPosition(const Point& point);
+    void normalizeTransitionMatrix();
+    std::vector<float> extractFeatures(const SensorData& data);
+    void serializeMetrics(JsonObject& obj, const AnalyticsMetrics& metrics);
     void updateBehaviorModel();
     void aggregateContributions();
     float calculateModelQuality();
