@@ -107,6 +107,12 @@ M5stackHuskyLens/
 
 ## 💻 Installation
 
+### Compatibilité
+- ESP32-S3
+- macOS (Intel & Apple Silicon M1/M2)
+- Linux
+- Windows
+
 ### Installation Rapide
 ```bash
 # Cloner le projet

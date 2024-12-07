@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.1] - 2024-12-07
+
+### Améliorations
+- Support pour macOS sur Apple Silicon (M1/M2)
+- Corrections de compatibilité pour le compilateur C++
+- Script automatique d'application des patches
+- Meilleure gestion des dépendances
+
+### Corrections
+- Résolution des conflits de types dans les fonctions min/max
+- Correction des problèmes de compilation sur macOS
+- Amélioration de la stabilité de la bibliothèque HuskyLens
+
 ## [1.0.0] - 2024-12-07
 
 ### Ajouts
