@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de la Sécurité</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .button.warning {
+            background: #f44336;
+        }
+        
+        .status {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .status.success {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+        
+        .status.error {
+            background: #f2dede;
+            color: #a94442;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f5f5f5;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            position: relative;
+            margin: 10% auto;
+            padding: 20px;
+            width: 70%;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestion de la Sécurité</h1>
+        
+        <div class="section">
+            <h2>Niveau de Sécurité</h2>
+            <div class="control-group">
+                <label>Niveau actuel :</label>
+                <select id="securityLevel" onchange="updateSecurityLevel()">
+                    <option value="LOW">Bas</option>
+                    <option value="MEDIUM" selected>Moyen</option>
+                    <option value="HIGH">Élevé</option>
+                    <option value="CUSTOM">Personnalisé</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Configuration Personnalisée</h2>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enableEncryption" checked>
+                    Activer le chiffrement
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enableAuthentication" checked>
+                    Activer l'authentification
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enableSecureBootload" checked>
+                    Activer le démarrage sécurisé
+                </label>
+            </div>
+            <div class="control-group">
+                <label>Rotation des clés (heures) :</label>
+                <input type="number" id="keyRotation" value="24" min="1">
+            </div>
+            <div class="control-group">
+                <label>Timeout session (minutes) :</label>
+                <input type="number" id="sessionTimeout" value="60" min="5">
+            </div>
+            <button class="button" onclick="saveSecurityConfig()">
+                Sauvegarder la Configuration
+            </button>
+        </div>
+        
+        <div class="section">
+            <h2>Gestion des Utilisateurs</h2>
+            <div class="control-group">
+                <label>Nom d'utilisateur :</label>
+                <input type="text" id="username">
+            </div>
+            <div class="control-group">
+                <label>Mot de passe :</label>
+                <input type="password" id="password">
+            </div>
+            <div class="control-group">
+                <label>Permissions :</label>
+                <select id="permissions" multiple>
+                    <option value="admin">Administrateur</option>
+                    <option value="user">Utilisateur</option>
+                    <option value="viewer">Visualisation</option>
+                </select>
+            </div>
+            <button class="button" onclick="addUser()">
+                Ajouter Utilisateur
+            </button>
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Permissions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Journal de Sécurité</h2>
+            <div id="securityLog" style="height: 200px; overflow-y: auto;">
+                <!-- Les logs seront insérés ici -->
+            </div>
+            <button class="button" onclick="exportLogs()">
+                Exporter les Logs
+            </button>
+            <button class="button warning" onclick="clearLogs()">
+                Effacer les Logs
+            </button>
+        </div>
+        
+        <div class="section">
+            <h2>Maintenance</h2>
+            <button class="button" onclick="rotateKeys()">
+                Rotation des Clés
+            </button>
+            <button class="button" onclick="backupConfig()">
+                Sauvegarder Configuration
+            </button>
+            <button class="button" onclick="checkIntegrity()">
+                Vérifier l'Intégrité
+            </button>
+            <button class="button warning" onclick="confirmReset()">
+                Réinitialiser Sécurité
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmation -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmation</h2>
+            <p id="modalMessage">Êtes-vous sûr ?</p>
+            <button class="button" onclick="executeConfirmed()">Confirmer</button>
+            <button class="button" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+    
+    <script>
+        // Connexion WebSocket
+        const ws = new WebSocket(`ws://${window.location.hostname}/security-ws`);
+        
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            handleSecurityEvent(data);
+        };
+        
+        // Gestion des événements de sécurité
+        function handleSecurityEvent(data) {
+            switch(data.type) {
+                case 'log':
+                    addLogEntry(data.message);
+                    break;
+                case 'status':
+                    showStatus(data.message, data.success);
+                    break;
+                case 'config':
+                    updateConfigDisplay(data);
+                    break;
+            }
+        }
+        
+        // Fonctions UI
+        function showStatus(message, success = true) {
+            const status = document.createElement('div');
+            status.className = `status ${success ? 'success' : 'error'}`;
+            status.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(status, container.firstChild);
+            
+            setTimeout(() => status.remove(), 5000);
+        }
+        
+        function addLogEntry(message) {
+            const log = document.getElementById('securityLog');
+            const entry = document.createElement('div');
+            entry.textContent = message;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateConfigDisplay(config) {
+            document.getElementById('securityLevel').value = config.level;
+            document.getElementById('enableEncryption').checked = config.encryption;
+            document.getElementById('enableAuthentication').checked = config.authentication;
+            document.getElementById('enableSecureBootload').checked = config.secureBootload;
+            document.getElementById('keyRotation').value = config.keyRotation;
+            document.getElementById('sessionTimeout').value = config.sessionTimeout;
+        }
+        
+        // Actions de sécurité
+        async function updateSecurityLevel() {
+            const level = document.getElementById('securityLevel').value;
+            const response = await fetch('/api/security/level', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({level})
+            });
+            
+            const data = await response.json();
+            showStatus(data.message, data.success);
+        }
+        
+        async function saveSecurityConfig() {
+            const config = {
+                encryption: document.getElementById('enableEncryption').checked,
+                authentication: document.getElementById('enableAuthentication').checked,
+                secureBootload: document.getElementById('enableSecureBootload').checked,
+                keyRotation: parseInt(document.getElementById('keyRotation').value),
+                sessionTimeout: parseInt(document.getElementById('sessionTimeout').value)
+            };
+            
+            const response = await fetch('/api/security/config', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(config)
+            });
+            
+            const data = await response.json();
+            showStatus(data.message, data.success);
+        }
+        
+        async function addUser() {
+            const user = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                permissions: Array.from(document.getElementById('permissions').selectedOptions)
+                    .map(option => option.value)
+            };
+            
+            const response = await fetch('/api/security/users', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(user)
+            });
+            
+            const data = await response.json();
+            showStatus(data.message, data.success);
+            
+            if (data.success) {
+                updateUserTable();
+                clearUserForm();
+            }
+        }
+        
+        function clearUserForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('permissions').selectedIndex = -1;
+        }
+        
+        async function updateUserTable() {
+            const response = await fetch('/api/security/users');
+            const users = await response.json();
+            
+            const tbody = document.querySelector('#userTable tbody');
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.permissions.join(', ')}</td>
+                    <td>
+                        <button onclick="editUser('${user.username}')">Éditer</button>
+                        <button onclick="deleteUser('${user.username}')">Supprimer</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Fonctions de maintenance
+        async function rotateKeys() {
+            const response = await fetch('/api/security/rotate-keys', {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            showStatus(data.message, data.success);
+        }
+        
+        async function backupConfig() {
+            const response = await fetch('/api/security/backup', {
+                method: 'POST'
+            });
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'security-backup.bin';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+        }
+        
+        async function checkIntegrity() {
+            const response = await fetch('/api/security/check-integrity');
+            const data = await response.json();
+            showStatus(data.message, data.success);
+        }
+        
+        // Modal et confirmations
+        function showModal(message, action) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('confirmModal').style.display = 'block';
+            window.confirmAction = action;
+        }
+        
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+        
+        function executeConfirmed() {
+            if (window.confirmAction) {
+                window.confirmAction();
+            }
+            closeModal();
+        }
+        
+        function confirmReset() {
+            showModal(
+                'Êtes-vous sûr de vouloir réinitialiser tous les paramètres de sécurité ?',
+                resetSecurity
+            );
+        }
+        
+        async function resetSecurity() {
+            const response = await fetch('/api/security/reset', {
+                method: 'POST'
+            });
+            
+            const data = await response.json();
+            showStatus(data.message, data.success);
+            
+            if (data.success) {
+                setTimeout(() => window.location.reload(), 2000);
+            }
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUserTable();
+            
+            // Fermeture du modal
+            document.querySelector('.close').onclick = closeModal;
+            window.onclick = (event) => {
+                if (event.target == document.getElementById('confirmModal')) {
+                    closeModal();
+                }
+            };
+        });
+    </script>
+</body>
+</html>
