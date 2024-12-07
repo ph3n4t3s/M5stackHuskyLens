@@ -136,6 +136,11 @@ def pre_build():
     print("Configuration terminée avec succès")
     return True
 
+<<<<<<< Updated upstream
 if __name__ == "__main__":
     success = pre_build()
     sys.exit(0 if success else 1)
+=======
+# Exécution du script
+pre_build()
+>>>>>>> Stashed changes
