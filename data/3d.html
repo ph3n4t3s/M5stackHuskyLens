@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisation 3D HuskyLens</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #1976D2;
+        }
+        
+        .slider-container {
+            margin: 10px 0;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div id="controls">
+        <h3>Contrôles</h3>
+        
+        <div class="control-group">
+            <button onclick="toggleVisualization()">Mode Visualisation</button>
+            <button onclick="resetView()">Réinitialiser Vue</button>
+        </div>
+        
+        <div class="control-group">
+            <div class="slider-container">
+                <label>Distance</label>
+                <input type="range" min="1" max="100" value="50" 
+                       oninput="updateDistance(this.value)">
+            </div>
+            
+            <div class="slider-container">
+                <label>Rotation</label>
+                <input type="range" min="0" max="360" value="0" 
+                       oninput="updateRotation(this.value)">
+            </div>
+            
+            <div class="slider-container">
+                <label>Échelle</label>
+                <input type="range" min="0.1" max="2" value="1" step="0.1"
+                       oninput="updateScale(this.value)">
+            </div>
+        </div>
+    </div>
+    
+    <div id="info-panel">
+        <h3>Informations</h3>
+        <div id="object-info">
+            <!-- Information sur les objets détectés -->
+        </div>
+        <div id="metrics">
+            <!-- Métriques de performance -->
+        </div>
+    </div>
+    
+    <script>
+        let scene, camera, renderer, controls;
+        let points = [];
+        let lines = [];
+        let currentMode = 'points';
+        
+        // Configuration
+        const config = {
+            pointSize: 0.1,
+            lineWidth: 2,
+            colors: {
+                point: 0x00ff00,
+                line: 0x0088ff,
+                background: 0x000000
+            },
+            gridSize: 100,
+            gridDivisions: 10
+        };
+        
+        // Initialisation
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(config.colors.background);
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+            camera.position.z = 5;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Grille
+            const gridHelper = new THREE.GridHelper(
+                config.gridSize,
+                config.gridDivisions,
+                0x444444,
+                0x222222
+            );
+            scene.add(gridHelper);
+            
+            // Lumières
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0);
+            scene.add(directionalLight);
+            
+            // Animation
+            animate();
+            
+            // Event listeners
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // WebSocket
+            connectWebSocket();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // WebSocket
+        function connectWebSocket() {
+            const ws = new WebSocket(`ws://${window.location.hostname}/3d-ws`);
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateScene(data);
+                updateInfo(data);
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket closed. Reconnecting...');
+                setTimeout(connectWebSocket, 1000);
+            };
+        }
+        
+        // Mise à jour de la scène
+        function updateScene(data) {
+            // Nettoyer la scène
+            points.forEach(point => scene.remove(point));
+            lines.forEach(line => scene.remove(line));
+            points = [];
+            lines = [];
+            
+            // Points
+            const geometry = new THREE.SphereGeometry(config.pointSize);
+            const material = new THREE.MeshPhongMaterial({
+                color: config.colors.point
+            });
+            
+            data.points.forEach(point => {
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(
+                    (point.x - 160) / 32,
+                    -(point.y - 120) / 24,
+                    0
+                );
+                scene.add(mesh);
+                points.push(mesh);
+            });
+            
+            // Lignes
+            if (currentMode === 'lines' && data.points.length > 1) {
+                const lineGeometry = new THREE.BufferGeometry();
+                const positions = [];
+                
+                for (let i = 1; i < data.points.length; i++) {
+                    const prev = data.points[i - 1];
+                    const curr = data.points[i];
+                    
+                    positions.push(
+                        (prev.x - 160) / 32, -(prev.y - 120) / 24, 0,
+                        (curr.x - 160) / 32, -(curr.y - 120) / 24, 0
+                    );
+                }
+                
+                lineGeometry.setAttribute(
+                    'position',
+                    new THREE.Float32BufferAttribute(positions, 3)
+                );
+                
+                const lineMaterial = new THREE.LineBasicMaterial({
+                    color: config.colors.line,
+                    linewidth: config.lineWidth
+                });
+                
+                const line = new THREE.LineSegments(lineGeometry, lineMaterial);
+                scene.add(line);
+                lines.push(line);
+            }
+        }
+        
+        // Mise à jour des informations
+        function updateInfo(data) {
+            const objectInfo = document.getElementById('object-info');
+            const metrics = document.getElementById('metrics');
+            
+            // Informations sur les objets
+            objectInfo.innerHTML = `
+                <p>Objets détectés: ${data.points.length}</p>
+                <p>Confiance moyenne: ${(data.confidence * 100).toFixed(1)}%</p>
+            `;
+            
+            // Métriques
+            metrics.innerHTML = `
+                <p>FPS: ${data.fps.toFixed(1)}</p>
+                <p>Latence: ${data.latency.toFixed(1)}ms</p>
+            `;
+        }
+        
+        // Contrôles utilisateur
+        function toggleVisualization() {
+            currentMode = currentMode === 'points' ? 'lines' : 'points';
+        }
+        
+        function resetView() {
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
+            controls.reset();
+        }
+        
+        function updateDistance(value) {
+            const distance = value / 10;
+            const vector = camera.position.normalize();
+            camera.position.copy(vector.multiplyScalar(distance));
+        }
+        
+        function updateRotation(value) {
+            const rotation = value * Math.PI / 180;
+            scene.rotation.y = rotation;
+        }
+        
+        function updateScale(value) {
+            scene.scale.set(value, value, value);
+        }
+        
+        // Démarrer l'application
+        init();
+    </script>
+</body>
+</html>

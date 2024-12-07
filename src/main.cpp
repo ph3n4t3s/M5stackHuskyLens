@@ -7,6 +7,9 @@
 #include "ConfigManager.h"
 #include "WiFiManager.h"
 #include "GestureAnalyzer.h"
+#include "ObjectRecognizer.h"
+#include "AutomationSystem.h"
+#include "MLSystem.h"
 
 // Instances globales
 HuskyLensPlus huskyLens;
@@ -16,6 +19,9 @@ DataLogger logger;
 ConfigManager configManager;
 WiFiManager wifiManager;
 GestureAnalyzer gestureAnalyzer;
+ObjectRecognizer objectRecognizer;
+AutomationSystem automationSystem;
+MLSystem mlSystem;
 Configuration config;
 
 // Variables de contrôle
@@ -167,6 +173,61 @@ void handleNormalOperation() {
     }
 }
 
+void setupAutomationRules() {
+    // Règle pour la détection d'objets multiples
+    Rule multiObjectRule;
+    multiObjectRule.name = "MultiObject";
+    multiObjectRule.description = "Détection de plusieurs objets";
+    multiObjectRule.conditions.push_back(Condition(TriggerType::OBJECT_COUNT));
+    multiObjectRule.conditions.back().evaluator = AutomationSystem::objectCountAbove(2);
+    multiObjectRule.actions.push_back(Action(ActionType::SEND_NOTIFICATION));
+    multiObjectRule.actions.back().executor = AutomationSystem::sendNotification("Objets multiples détectés!");
+    
+    automationSystem.addRule(multiObjectRule);
+    
+    // Règle pour les gestes
+    Rule gestureRule;
+    gestureRule.name = "GestureDetection";
+    gestureRule.description = "Détection de gestes";
+    gestureRule.conditions.push_back(Condition(TriggerType::GESTURE_RECOGNIZED));
+    gestureRule.conditions.back().evaluator = AutomationSystem::gestureDetected("cercle");
+    gestureRule.actions.push_back(Action(ActionType::CHANGE_MODE));
+    gestureRule.actions.back().executor = AutomationSystem::changeMode(HuskyMode::FACE_RECOGNITION);
+    
+    automationSystem.addRule(gestureRule);
+}
+
+void setupMLModels() {
+    // Modèle pour la classification des objets
+    std::vector<float> weights = {
+        0.1f, 0.2f, 0.3f, 0.4f, 0.5f,  // Exemple de poids
+        0.6f, 0.7f, 0.8f, 0.9f, 1.0f
+    };
+    
+    mlSystem.addModel("objectClassifier", weights, 6, 4, 0.7f);
+}
+
+void setupObjectTemplates() {
+    // Template pour un rectangle
+    std::vector<Point> rectangle = {
+        Point(0, 0),
+        Point(100, 0),
+        Point(100, 50),
+        Point(0, 50),
+        Point(0, 0)
+    };
+    objectRecognizer.addTemplate("rectangle", rectangle);
+    
+    // Template pour un triangle
+    std::vector<Point> triangle = {
+        Point(50, 0),
+        Point(100, 87),
+        Point(0, 87),
+        Point(50, 0)
+    };
+    objectRecognizer.addTemplate("triangle", triangle);
+}
+
 void setup() {
     M5.begin();
     
@@ -177,6 +238,19 @@ void setup() {
     
     // Charger la configuration
     config = configManager.loadConfig();
+    
+    // Initialiser les systèmes
+    if (!objectRecognizer.begin()) {
+        logger.logError("Échec de l'initialisation ObjectRecognizer");
+    }
+    
+    if (!automationSystem.begin()) {
+        logger.logError("Échec de l'initialisation AutomationSystem");
+    }
+    
+    if (!mlSystem.begin()) {
+        logger.logError("Échec de l'initialisation MLSystem");
+    }
     
     // Initialiser le WiFi si configuré
     if (config.autoLearn) {
@@ -191,6 +265,11 @@ void setup() {
     
     display.begin();
     processor.begin();
+    
+    // Configuration des systèmes
+    setupAutomationRules();
+    setupMLModels();
+    setupObjectTemplates();
     
     // Configurer les gestes prédéfinis
     std::vector<Point> circle;
@@ -216,6 +295,27 @@ void setup() {
     delay(1000);
 }
 
+void handleObjectRecognition(SensorData& data) {
+    std::vector<ObjectMatch> matches = objectRecognizer.recognizeObjects(data.points);
+    for (const auto& match : matches) {
+        data.labels.push_back(match.name + " (" + String(match.confidence * 100, 0) + "%)");
+    }
+}
+
+void handleMLPrediction(SensorData& data) {
+    std::vector<float> features = MLSystem::extractFeatures(data);
+    std::vector<float> predictions = mlSystem.predict("objectClassifier", features);
+    
+    if (!predictions.empty()) {
+        float maxConf = *std::max_element(predictions.begin(), predictions.end());
+        if (maxConf > 0.7f) {
+            int classIndex = std::distance(predictions.begin(),
+                std::max_element(predictions.begin(), predictions.end()));
+            data.labels.push_back("Class " + String(classIndex) + " (" + String(maxConf * 100, 0) + "%)");
+        }
+    }
+}
+
 void loop() {
     M5.update();
     
@@ -232,17 +332,25 @@ void loop() {
             // Gestion des données
             processor.process(data);
             handleGestures(data);
+            handleObjectRecognition(data);
+            handleMLPrediction(data);
+            
+            // Automation et logging
+            automationSystem.update(data);
             handleDataLogging(data);
             handleWiFiData(data);
             
             // Mise à jour de l'affichage
             display.update(processor.getDisplayData());
             
-            // Sauvegarder la configuration si nécessaire
-            static unsigned long lastConfigSave = 0;
-            if (millis() - lastConfigSave >= 60000) { // Toutes les minutes
+            // Sauvegarde périodique
+            static unsigned long lastSave = 0;
+            if (millis() - lastSave >= 60000) { // Toutes les minutes
                 configManager.saveConfig(config);
-                lastConfigSave = millis();
+                automationSystem.saveRules("/automation_rules.json");
+                mlSystem.saveModel("objectClassifier", "/ml_model.json");
+                objectRecognizer.saveTemplates("/object_templates.json");
+                lastSave = millis();
             }
         } else {
             display.showError("Connexion perdue!");
