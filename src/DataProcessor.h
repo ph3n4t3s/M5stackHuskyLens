@@ -20,6 +20,7 @@ private:
     void processGestureData(const SensorData& data);
     void processDistanceData(const SensorData& data);
     void processMultiObjectData(const SensorData& data);
+    void processStandardData(const SensorData& data);
     void updateHistory(const SensorData& data);
     void analyzeData();
     std::vector<float> calculateTrends() const;
