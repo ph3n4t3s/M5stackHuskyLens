@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mise à jour Firmware</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .status-box {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            background: #f8f8f8;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+        
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .error {
+            color: #f44336;
+            margin: 10px 0;
+        }
+        
+        .success {
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mise à jour Firmware</h1>
+        
+        <div class="status-box">
+            <h3>Version actuelle</h3>
+            <p>Firmware: <span id="currentVersion">1.0.0</span></p>
+            <p>Système: <span id="systemInfo">M5Stack Core S3</span></p>
+        </div>
+        
+        <div id="updateForm">
+            <h3>Sélectionner le firmware</h3>
+            <input type="file" id="firmwareFile" accept=".bin">
+            <button class="button" onclick="uploadFirmware()" id="uploadButton">
+                Mettre à jour
+            </button>
+        </div>
+        
+        <div id="progressBox" style="display: none;">
+            <h3>Progression</h3>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            <p id="progressText">0%</p>
+        </div>
+        
+        <div id="messages">
+            <!-- Messages d'erreur ou de succès -->
+        </div>
+    </div>
+    
+    <script>
+        function showMessage(message, isError = false) {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.textContent = message;
+            messages.appendChild(div);
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+        
+        async function uploadFirmware() {
+            const file = document.getElementById('firmwareFile').files[0];
+            if (!file) {
+                showMessage('Veuillez sélectionner un fichier', true);
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('firmware', file);
+            
+            document.getElementById('updateForm').style.display = 'none';
+            document.getElementById('progressBox').style.display = 'block';
+            
+            try {
+                const response = await fetch('/update', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showMessage('Mise à jour réussie! Redémarrage...');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000);
+                } else {
+                    throw new Error('Échec de la mise à jour');
+                }
+            } catch (error) {
+                showMessage(error.message, true);
+                document.getElementById('updateForm').style.display = 'block';
+                document.getElementById('progressBox').style.display = 'none';
+            }
+        }
+        
+        // Websocket pour les mises à jour en temps réel
+        const ws = new WebSocket(`ws://${window.location.hostname}/ws`);
+        
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'progress') {
+                updateProgress(data.value);
+            } else if (data.type === 'message') {
+                showMessage(data.text, data.isError);
+            }
+        };
+        
+        ws.onclose = () => {
+            showMessage('Connexion perdue. Rechargement...', true);
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        };
+        
+        // Récupérer les informations système
+        fetch('/system-info')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('currentVersion').textContent = data.version;
+                document.getElementById('systemInfo').textContent = data.system;
+            })
+            .catch(error => {
+                showMessage('Erreur de chargement des informations système', true);
+            });
+    </script>
+</body>
+</html>

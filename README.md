@@ -1,4 +1,123 @@
-# README
+# M5Stack HuskyLens - Système de Vision Avancé
+
+## Vue d'ensemble
+Système de vision par ordinateur avancé combinant le M5Stack Core S3 et le module HuskyLens, enrichi de fonctionnalités d'IA, de traitement d'image en temps réel et d'automatisation.
+
+## Fonctionnalités principales
+
+### 1. Vision et Reconnaissance
+- Reconnaissance faciale multi-personnes
+- Suivi d'objets en temps réel
+- Détection de lignes et intersections
+- Reconnaissance de couleurs et formes
+- Détection de tags et QR codes
+- Vision nocturne adaptative
+- Stabilisation d'image en temps réel
+
+### 2. Intelligence Artificielle
+- Apprentissage automatique embarqué (TensorFlow Lite)
+- Classification d'objets personnalisée
+- Reconnaissance de gestes avancée
+- Détection de motifs complexes
+- Analyse comportementale
+
+### 3. Traitement d'Image
+- Amélioration automatique de la qualité
+- Filtres configurables en temps réel
+- Réduction du bruit intelligente
+- Correction de la luminosité adaptative
+- Détection de contours avancée
+- Mode vision nocturne
+
+### 4. Automatisation
+- Système de règles personnalisables
+- Actions conditionnelles
+- Déclencheurs multiples
+- Planification temporelle
+- Réponses automatisées
+
+### 5. Connectivité
+- Interface Web en temps réel
+- API REST pour le contrôle
+- Streaming vidéo
+- Sauvegarde dans le cloud
+- Notifications push
+
+### 6. Analytics
+- Analyse statistique en temps réel
+- Génération de rapports
+- Historique des détections
+- Métriques de performance
+- Export de données
+
+## Technologies Utilisées
+- TensorFlow Lite pour l'inférence IA
+- EloquentTinyML pour l'apprentissage embarqué
+- FastLED pour le traitement d'image optimisé
+- AsyncWebServer pour l'interface web
+- ArduinoJson pour la gestion des données
+- FreeRTOS pour le multitâche
+
+## Nouveaux Systèmes
+
+### 1. Système de Vision Nocturne
+- Amélioration adaptative de la luminosité
+- Réduction du bruit intelligente
+- Mode infrarouge automatique
+- Détection en faible luminosité
+
+### 2. Système d'Automatisation
+- Moteur de règles flexible
+- Actions personnalisables
+- Conditions complexes
+- Historique des déclenchements
+
+### 3. Système ML Embarqué
+- Classification en temps réel
+- Apprentissage incrémental
+- Gestion des modèles
+- Prédictions optimisées
+
+### 4. Traitement d'Image Avancé
+- Filtres matriciels personnalisables
+- Stabilisation de mouvement
+- Détection de contours adaptative
+- Amélioration automatique
+
+## Guide d'Installation et d'Utilisation
+Voir le [Guide d'Installation Détaillé](README_INSTALL.md) pour les instructions complètes d'installation, de configuration et d'utilisation.
+
+## Prérequis
+- M5Stack Core S3
+- Module HuskyLens
+- PlatformIO IDE
+- Carte micro SD (optionnelle)
+- Câbles de connexion I2C
+
+## Installation Rapide
+```bash
+# Cloner le projet
+git clone https://github.com/ph3n4t3s/M5stackHuskyLens.git
+cd M5stackHuskyLens
+
+# Installer les dépendances
+pio pkg install
+
+# Compiler et téléverser
+pio run -t upload
+```
+
+## Configuration Rapide
+1. Première utilisation : connectez-vous au point d'accès WiFi "HuskyLens_XXXXXX"
+2. Accédez à http://192.168.4.1 pour la configuration
+3. Utilisez l'interface web ou les boutons physiques pour la configuration
+
+## Documentation
+La documentation complète inclut :
+- [Guide d'Installation](README_INSTALL.md)
+- [Référence API](docs/API.md)
+- [Guide Développeur](docs/DEVELOPER.md)
+- [Guide Utilisateur](docs/USER.md)
 
 # Cahier des Charges - Système de Vision par Ordinateur M5Stack-HuskyLens
 
