@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.2] - 2024-12-07
+
+### Améliorations
+- Nouveau système de build avec script Python
+- Configuration JSON pour les dépendances
+- Meilleure gestion des patches
+- Installation automatisée des dépendances
+
+### Corrections
+- Résolution de l'erreur "platform-ide.build not found"
+- Amélioration de la stabilité du build système
+- Optimisation du processus de compilation
+
 ## [1.0.1] - 2024-12-07
 
 ### Améliorations
