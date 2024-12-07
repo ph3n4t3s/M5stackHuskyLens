@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuskyLens Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .status {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        .canvas-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .log-container {
+            height: 200px;
+            overflow-y: auto;
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HuskyLens Controller</h1>
+        
+        <div class="status">
+            <div>État: <span id="connectionStatus">Connecté</span></div>
+            <div>Mode: <span id="currentMode">Reconnaissance faciale</span></div>
+            <div>Objets détectés: <span id="objectCount">0</span></div>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="preview"></canvas>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Mode de détection</h3>
+                <button onclick="setMode('face')">Reconnaissance faciale</button>
+                <button onclick="setMode('object')">Suivi d'objets</button>
+                <button onclick="setMode('line')">Suivi de lignes</button>
+                <button onclick="setMode('color')">Reconnaissance couleurs</button>
+            </div>
+            
+            <div class="control-group">
+                <h3>Paramètres</h3>
+                <label>Sensibilité</label>
+                <input type="range" min="1" max="10" value="5" oninput="updateSensitivity(this.value)">
+                <label>Zoom</label>
+                <input type="range" min="1" max="5" value="1" oninput="updateZoom(this.value)">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <h3>Actions</h3>
+            <button onclick="learn()">Apprendre</button>
+            <button onclick="forget()">Oublier</button>
+            <button onclick="exportData()">Exporter données</button>
+        </div>
+        
+        <h3>Logs</h3>
+        <div class="log-container" id="logs">
+        </div>
+    </div>
+    
+    <script>
+        let ws;
+        let canvas = document.getElementById('preview');
+        let ctx = canvas.getContext('2d');
+        
+        function connect() {
+            ws = new WebSocket(`ws://${window.location.hostname}/ws`);
+            
+            ws.onopen = () => {
+                document.getElementById('connectionStatus').textContent = 'Connecté';
+                addLog('Connecté au serveur');
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('connectionStatus').textContent = 'Déconnecté';
+                addLog('Déconnexion du serveur');
+                setTimeout(connect, 1000);
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateDisplay(data);
+            };
+        }
+        
+        function updateDisplay(data) {
+            document.getElementById('objectCount').textContent = data.objectCount;
+            
+            // Effacer le canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dessiner les points
+            data.points.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+            });
+            
+            // Afficher les labels
+            data.labels.forEach((label, index) => {
+                const point = data.points[index];
+                if (point) {
+                    ctx.fillStyle = 'black';
+                    ctx.fillText(label, point.x + 10, point.y);
+                }
+            });
+        }
+        
+        function addLog(message) {
+            const logs = document.getElementById('logs');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        function setMode(mode) {
+            ws.send(JSON.stringify({command: 'setMode', mode: mode}));
+            document.getElementById('currentMode').textContent = mode;
+            addLog(`Mode changé: ${mode}`);
+        }
+        
+        function updateSensitivity(value) {
+            ws.send(JSON.stringify({command: 'setSensitivity', value: parseInt(value)}));
+            addLog(`Sensibilité mise à jour: ${value}`);
+        }
+        
+        function updateZoom(value) {
+            ws.send(JSON.stringify({command: 'setZoom', value: parseInt(value)}));
+            addLog(`Zoom mis à jour: ${value}`);
+        }
+        
+        function learn() {
+            ws.send(JSON.stringify({command: 'learn'}));
+            addLog('Apprentissage lancé');
+        }
+        
+        function forget() {
+            ws.send(JSON.stringify({command: 'forget'}));
+            addLog('Oubli des motifs');
+        }
+        
+        function exportData() {
+            window.location.href = '/export';
+            addLog('Export des données lancé');
+        }
+        
+        // Initialisation
+        connect();
+        
+        // Ajuster la taille du canvas lors du redimensionnement
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+        
+        // Ajuster la taille initiale
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    </script>
+</body>
+</html>
