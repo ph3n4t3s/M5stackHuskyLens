@@ -1,0 +1,18 @@
+{
+    "patches": {
+        "HuskyLens": {
+            "patch_file": "mac_compatibility.patch",
+            "target_dir": "HuskyLens"
+        }
+    },
+    "libraries": {
+        "AsyncTCP": {
+            "repository": "https://github.com/me-no-dev/AsyncTCP.git",
+            "version": "1.1.1"
+        },
+        "ESPAsyncWebServer": {
+            "repository": "https://github.com/me-no-dev/ESPAsyncWebServer.git",
+            "version": "2.1.0"
+        }
+    }
+}
