@@ -63,6 +63,7 @@ struct HistoricalData {
 
 struct SensorData {
     std::vector<Point> points;
+    std::vector<String> labels;
     int objectCount;
     float confidence;
     unsigned long timestamp;

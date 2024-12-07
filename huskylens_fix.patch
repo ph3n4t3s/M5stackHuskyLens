@@ -1,0 +1,7 @@
+diff --git a/HUSKYLENS.h b/HUSKYLENS.h
+index abc123..def456 789
+--- a/HUSKYLENS.h
++++ b/HUSKYLENS.h
+@@ -171,1 +171,1 @@ class HUSKYLENS {
+-        protocolPtr = (Protocol_t*) realloc(protocolPtr, max(protocolInfo.protocolSize, 1) * sizeof(Protocol_t));
++        protocolPtr = (Protocol_t*) realloc(protocolPtr, std::max<int>(static_cast<int>(protocolInfo.protocolSize), 1) * sizeof(Protocol_t));
