@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.0.0] - 2024-12-07
+### Added
+- Interface utilisateur moderne et adaptative
+- Nouvelle séquence de démarrage avec logs en temps réel
+- Système de QR Code pour configuration WiFi
+- Gestion avancée des paramètres
+- Nouveau gestionnaire de configuration (ConfigManager)
+- Gestionnaire de démarrage dédié (BootManager)
+- Support des différentes tailles de police
+- Mode nuit et contrôle de luminosité
+- Système de sauvegarde des paramètres dans l'EEPROM
+
+### Changed
+- Refonte complète de l'interface utilisateur
+- Amélioration de l'affichage des informations
+- Restructuration du code avec nouveaux gestionnaires
+- Meilleure gestion des états du système
+- Organisation plus claire des fichiers sources
+- Amélioration de la gestion des erreurs
+- Optimisation de l'utilisation de l'écran
+- Intégration plus fluide du QR Code
+
+### Technical Improvements
+- Nouvelle architecture modulaire
+- Gestion améliorée de la mémoire
+- Support complet de l'EEPROM
+- Callbacks WiFi intégrés
+- Meilleure gestion des événements
+- Support du mode debug
+- Système de logs amélioré
+
+### Documentation
+- Mise à jour complète de la documentation technique
+- Nouveaux guides d'utilisation
+- Documentation des paramètres de configuration
+- Guide de démarrage rapide mis à jour
+- Documentation de l'API mise à jour
+
 ## [1.1.1] - 2024-12-08
 ### Added
 - Analyse détaillée des coûts du projet

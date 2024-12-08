@@ -1,6 +1,6 @@
 # M5Stack HuskyLens
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/ph3n4t3s/M5stackHuskyLens/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/ph3n4t3s/M5stackHuskyLens/releases)
 [![Coût total](https://img.shields.io/badge/co%C3%BBt%20total-$574.63-green.svg)](docs/coast/README.md)
 [![Période](https://img.shields.io/badge/p%C3%A9riode-Mar%202024--Dec%202024-lightgrey.svg)](docs/coast/README.md)
 
@@ -11,11 +11,14 @@ M5Stack HuskyLens est une solution complète de vision par ordinateur combinant 
 ## Caractéristiques principales
 
 - 🎯 Reconnaissance d'objets et de visages en temps réel
-- 📱 Interface utilisateur intuitive sur écran LCD
-- 🌐 Configuration et monitoring via interface web
+- 📱 Interface utilisateur moderne et adaptative
+- 🌐 Configuration simplifiée par QR Code
 - 📊 Analytics et métriques intégrés
+- 🌙 Mode nuit et contrôle de luminosité
+- 💾 Sauvegarde automatique des paramètres
+- 📋 Logs en temps réel au démarrage
+- ⚙️ Configuration flexible accessible à tout moment
 - 🔄 Mise à jour Over-The-Air (OTA)
-- 💾 Stockage local des données
 
 ## Prérequis
 
@@ -75,15 +78,25 @@ pio run -t upload
 
 ## Utilisation
 
-### Mode autonome
+### Premier démarrage
 1. Allumez l'appareil
-2. Utilisez les boutons pour la navigation
-3. Sélectionnez le mode de reconnaissance
+2. Suivez la séquence de démarrage visuelle
+3. Scannez le QR Code avec votre smartphone pour la configuration WiFi
+
+### Utilisation normale
+1. Utilisez le bouton A pour afficher/masquer le QR Code
+2. Utilisez le bouton B pour accéder aux paramètres
+3. Utilisez le bouton C pour sauvegarder les modifications
 
 ### Mode connecté
-1. Connectez-vous au réseau WiFi
+1. Connectez-vous au réseau WiFi via le QR Code
 2. Accédez à l'interface web
-3. Configurez et monitorer à distance
+3. Configurez et monitorez à distance
+
+### Personnalisation
+1. Accédez aux paramètres via le bouton B
+2. Ajustez la luminosité et le mode nuit
+3. Les paramètres sont sauvegardés automatiquement
 
 ## Contribution
 
