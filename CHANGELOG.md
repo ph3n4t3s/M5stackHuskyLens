@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1] - 2024-12-08
+### Added
+- Analyse détaillée des coûts du projet
+- Scripts d'analyse des coûts Claude AI
+- Documentation des coûts et métriques
+- Historique complet des interactions
+
+### Changed
+- Réorganisation de la documentation des coûts
+- Ajout des données de coûts historiques
+- Optimisation de l'utilisation de l'API
+
 ## [1.1.0] - 2024-12-08
 ### Added
 - Support complet pour macOS M2

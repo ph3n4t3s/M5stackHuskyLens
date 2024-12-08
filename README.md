@@ -1,5 +1,9 @@
 # M5Stack HuskyLens
 
+[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/ph3n4t3s/M5stackHuskyLens/releases)
+[![Coût total](https://img.shields.io/badge/co%C3%BBt%20total-$574.63-green.svg)](docs/coast/README.md)
+[![Période](https://img.shields.io/badge/p%C3%A9riode-Mar%202024--Dec%202024-lightgrey.svg)](docs/coast/README.md)
+
 ## À propos
 
 M5Stack HuskyLens est une solution complète de vision par ordinateur combinant la puissance du M5Stack CoreS3 et les capacités de reconnaissance du module HuskyLens. Cette solution permet la reconnaissance d'objets, de visages, et l'analyse en temps réel dans un package compact et facile à utiliser.
@@ -96,3 +100,20 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 ## Contact
 
 Project Link: [https://github.com/ph3n4t3s/M5stackHuskyLens](https://github.com/ph3n4t3s/M5stackHuskyLens)
+
+## Analyse des coûts
+
+Ce projet a été développé avec l'aide de Claude AI, ce qui nous permet d'avoir une transparence totale sur les coûts de développement.
+
+### Résumé des coûts
+- **Coût total** : $574.63
+- **Période** : Mars 2024 - Décembre 2024
+- **Pic d'utilisation** : Avril 2024 ($296.66)
+- **Coût moyen mensuel** : $63.85
+
+### Répartition
+- Développement initial : $530.78 (92.4%)
+- Optimisations : $17.86 (3.1%)
+- Maintenance : $26.00 (4.5%)
+
+Pour plus de détails, voir [l'analyse complète des coûts](docs/coast/README.md).

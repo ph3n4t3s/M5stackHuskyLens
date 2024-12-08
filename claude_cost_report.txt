@@ -1,0 +1,24 @@
+
+Rapport détaillé des coûts d'utilisation de Claude AI
+
+Période d'analyse: du 2024-12-04 
+                  au 2024-12-08
+
+Statistiques globales:
+---------------------
+Tokens en entrée:     3,664
+Tokens en sortie:     22,389
+Tokens totaux:        26,053
+
+Coûts:
+-----
+Coût des entrées:     $0.03
+Coût des sorties:     $0.54
+Coût total:           $0.57
+
+Détail par mois:
+--------------
+2024/12:
+  Tokens entrée:      3,664
+  Tokens sortie:      22,389
+  Coût:              $0.57
