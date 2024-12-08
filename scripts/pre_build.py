@@ -1,142 +1,72 @@
 #!/usr/bin/env python3
-
 import os
-import json
-import subprocess
 import sys
+import shutil
+import platform
 
-# Variables globales
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_NAME = "esp32-s3-dev"
+Import("env")
 
-class BuildEnvironment:
-    def __init__(self):
-        self.project_dir = PROJECT_DIR
-        self.env_name = ENV_NAME
-
-    def get(self, key):
-        if key == 'PROJECT_DIR':
-            return self.project_dir
-        elif key == 'PIOENV':
-            return self.env_name
-        return None
-
-def load_config():
-    """Charge la configuration depuis config.json"""
-    config_path = os.path.join(PROJECT_DIR, "scripts", "config.json")
+def get_project_dir():
+    """Détermine le chemin du projet de manière compatible avec tous les systèmes"""
     try:
-        with open(config_path, 'r') as f:
-            return json.load(f)
+        # Essaie d'abord d'utiliser __file__ si disponible
+        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    except NameError:
+        # Si __file__ n'est pas disponible, utilise le répertoire de travail actuel
+        return os.path.dirname(os.getcwd())
+
+PROJECT_DIR = get_project_dir()
+DATA_DIR = os.path.join(PROJECT_DIR, "data")
+
+def create_data_dir():
+    """Crée le répertoire data s'il n'existe pas"""
+    try:
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
+            print(f"Répertoire data créé: {DATA_DIR}")
     except Exception as e:
-        print(f"Erreur lors du chargement de la configuration : {e}")
-        return {}
-
-def apply_patches(env):
-    """Applique les patches nécessaires aux bibliothèques"""
-    print("Application des patches...")
-    
-    # Chemin vers les patches
-    patches_dir = os.path.join(env.get('PROJECT_DIR'), "patches")
-    if not os.path.exists(patches_dir):
-        print("Dossier patches non trouvé")
+        print(f"Erreur lors de la création du répertoire data: {e}")
         return False
-        
-    # Chemin vers les bibliothèques
-    lib_dir = os.path.join(env.get('PROJECT_DIR'), ".pio", "libdeps", env.get('PIOENV'))
-    if not os.path.exists(lib_dir):
-        print("Dossier lib non trouvé")
-        return False
-        
-    # Chargement de la configuration
-    config = load_config()
-    if not config or 'patches' not in config:
-        print("Configuration des patches non trouvée")
-        return False
-
-    success = True
-    for lib_name, patch_info in config['patches'].items():
-        lib_dir_path = os.path.join(lib_dir, patch_info['target_dir'])
-        patch_file = os.path.join(patches_dir, patch_info['patch_file'])
-        
-        if os.path.exists(lib_dir_path) and os.path.exists(patch_file):
-            try:
-                result = subprocess.run(
-                    ['patch', '-d', lib_dir_path, '-p1', '-i', patch_file],
-                    capture_output=True,
-                    text=True
-                )
-                if result.returncode == 0:
-                    print(f"Patch appliqué avec succès pour {lib_name}")
-                else:
-                    print(f"Erreur lors de l'application du patch pour {lib_name}")
-                    print(f"Sortie : {result.stderr}")
-                    success = False
-            except Exception as e:
-                print(f"Erreur lors de l'application du patch pour {lib_name}: {e}")
-                success = False
-    
-    return success
-
-def check_dependencies(env):
-    """Vérifie et installe les dépendances manquantes"""
-    print("Vérification des dépendances...")
-    
-    config = load_config()
-    if not config or 'libraries' not in config:
-        print("Configuration des bibliothèques non trouvée")
-        return False
-        
-    lib_dir = os.path.join(env.get('PROJECT_DIR'), ".pio", "libdeps", env.get('PIOENV'))
-    if not os.path.exists(lib_dir):
-        os.makedirs(lib_dir)
-        
-    success = True
-    for lib_name, lib_info in config['libraries'].items():
-        lib_path = os.path.join(lib_dir, lib_name)
-        if not os.path.exists(lib_path):
-            try:
-                # Clone du dépôt Git
-                result = subprocess.run(
-                    ['git', 'clone', '--branch', lib_info['version'], lib_info['repository'], lib_path],
-                    capture_output=True,
-                    text=True
-                )
-                if result.returncode == 0:
-                    print(f"Bibliothèque {lib_name} installée avec succès")
-                else:
-                    print(f"Erreur lors de l'installation de {lib_name}")
-                    print(f"Sortie : {result.stderr}")
-                    success = False
-            except Exception as e:
-                print(f"Erreur lors de l'installation de {lib_name}: {e}")
-                success = False
-                
-    return success
-
-def pre_build():
-    """Fonction principale de pré-build"""
-    print("Exécution des scripts de pré-build...")
-    
-    # Création de l'environnement
-    if 'env' in globals():
-        build_env = env
-    else:
-        build_env = BuildEnvironment()
-    
-    # Vérification des dépendances
-    if not check_dependencies(build_env):
-        print("Erreur lors de la vérification des dépendances")
-        return False
-    
-    # Application des patches
-    if not apply_patches(build_env):
-        print("Erreur lors de l'application des patches")
-        return False
-    
-    print("Configuration terminée avec succès")
     return True
 
-if __name__ == "__main__":
-    success = pre_build()
-    sys.exit(0 if success else 1)
+def copy_version_file():
+    """Copie le fichier VERSION dans le répertoire data"""
+    version_file = os.path.join(PROJECT_DIR, "VERSION")
+    try:
+        if os.path.exists(version_file):
+            shutil.copy2(version_file, os.path.join(DATA_DIR, "VERSION"))
+            print(f"Fichier VERSION copié vers: {DATA_DIR}")
+            return True
+        else:
+            print(f"Fichier VERSION non trouvé: {version_file}")
+            return False
+    except Exception as e:
+        print(f"Erreur lors de la copie du fichier VERSION: {e}")
+        return False
 
+def print_environment_info():
+    """Affiche les informations sur l'environnement"""
+    print("\nInformations sur l'environnement:")
+    print(f"Système d'exploitation: {platform.system()}")
+    print(f"Architecture: {platform.machine()}")
+    print(f"Python version: {sys.version}")
+    print(f"Répertoire du projet: {PROJECT_DIR}")
+    print(f"Répertoire data: {DATA_DIR}\n")
+
+def main():
+    """Fonction principale du script de pré-build"""
+    print("\n=== Début du script pre-build ===")
+    print_environment_info()
+    
+    success = True
+    if not create_data_dir():
+        success = False
+    if not copy_version_file():
+        success = False
+        
+    print("\n=== Fin du script pre-build ===")
+    if not success:
+        sys.exit(1)
+
+# Point d'entrée pour PlatformIO
+main()
