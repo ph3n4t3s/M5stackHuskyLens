@@ -7,13 +7,24 @@ import platform
 Import("env")
 
 def get_project_dir():
-    """Détermine le chemin du projet de manière compatible avec tous les systèmes"""
+    """Détermine le chemin du projet en utilisant l'environnement PlatformIO"""
     try:
-        # Essaie d'abord d'utiliser __file__ si disponible
+        # Utilise PROJECTDIR de l'environnement PlatformIO si disponible
+        project_dir = env.get('PROJECTDIR', None)
+        if project_dir:
+            return project_dir
+    except:
+        pass
+    
+    try:
+        # Essaie d'utiliser __file__ comme fallback
         return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     except NameError:
-        # Si __file__ n'est pas disponible, utilise le répertoire de travail actuel
-        return os.path.dirname(os.getcwd())
+        # Dernier recours : utilise le répertoire courant
+        current_dir = os.getcwd()
+        if os.path.basename(current_dir) == "scripts":
+            return os.path.dirname(current_dir)
+        return current_dir
 
 PROJECT_DIR = get_project_dir()
 DATA_DIR = os.path.join(PROJECT_DIR, "data")
@@ -50,8 +61,16 @@ def print_environment_info():
     print(f"Système d'exploitation: {platform.system()}")
     print(f"Architecture: {platform.machine()}")
     print(f"Python version: {sys.version}")
-    print(f"Répertoire du projet: {PROJECT_DIR}")
-    print(f"Répertoire data: {DATA_DIR}\n")
+    print(f"Répertoire de travail actuel: {os.getcwd()}")
+    print(f"Répertoire du projet détecté: {PROJECT_DIR}")
+    print(f"Répertoire data: {DATA_DIR}")
+    print(f"Contenu du répertoire projet:")
+    try:
+        for item in os.listdir(PROJECT_DIR):
+            print(f"  - {item}")
+    except Exception as e:
+        print(f"  Erreur lors de la lecture du répertoire: {e}")
+    print("")
 
 def main():
     """Fonction principale du script de pré-build"""
