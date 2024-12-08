@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0] - 2024-12-08
+### Added
+- Support complet pour macOS M2
+- Amélioration majeure du système de build
+- Interface de mise à jour intégrée
+
+### Changed
+- Refonte du script pre_build.py pour une meilleure compatibilité
+- Amélioration de la gestion des erreurs
+- Mise à jour de la documentation
+
+### Fixed
+- Correction des problèmes de compilation sur macOS M2
+- Résolution des problèmes de chemins sur différents systèmes d'exploitation
+- Correction des problèmes de synchronisation Git
+
 ## [1.0.2] - 2024-12-07
 
 ### Améliorations
