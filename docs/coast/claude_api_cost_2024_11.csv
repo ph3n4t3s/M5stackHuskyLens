@@ -1,0 +1,6 @@
+usage_date_utc,model,api_key,usage_type,token_type,cost_usd
+2024-11-18,Claude 3.5 Sonnet 2024-06-20,,message,input_no_cache,0.03
+2024-11-18,Claude 3.5 Sonnet 2024-06-20,,message,input_cache_write,0.04
+2024-11-18,Claude 3.5 Sonnet 2024-06-20,,message,output,0.04
+2024-11-18,Claude 3.5 Sonnet 2024-10-22,,message,input_no_cache,0.01
+2024-11-18,Claude 3.5 Sonnet 2024-10-22,,message,output,0.01

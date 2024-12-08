@@ -1,0 +1,45 @@
+usage_date_utc,model,api_key,usage_type,token_type,cost_usd
+2024-05-02,Claude 3 Opus,,message,input_no_cache,0.28
+2024-05-02,Claude 3 Opus,,message,output,0.68
+2024-05-03,Claude 3 Opus,,message,input_no_cache,0.61
+2024-05-03,Claude 3 Opus,,message,output,0.57
+2024-05-04,Claude 3 Opus,,message,input_no_cache,5.69
+2024-05-04,Claude 3 Opus,,message,output,1.87
+2024-05-05,Claude 3 Opus,,message,input_no_cache,4.54
+2024-05-05,Claude 3 Opus,,message,output,1.86
+2024-05-06,Claude 3 Haiku,,message,input_no_cache,0.00
+2024-05-06,Claude 3 Haiku,,message,output,0.00
+2024-05-06,Claude 3 Opus,,message,input_no_cache,3.20
+2024-05-06,Claude 3 Opus,,message,output,2.22
+2024-05-13,Claude 3 Haiku,,message,input_no_cache,0.03
+2024-05-13,Claude 3 Haiku,,message,output,0.02
+2024-05-13,Claude 3 Opus,,message,input_no_cache,0.71
+2024-05-13,Claude 3 Opus,,message,output,0.97
+2024-05-16,Claude 3 Opus,,message,input_no_cache,2.88
+2024-05-16,Claude 3 Opus,,message,output,1.65
+2024-05-17,Claude 3 Opus,,message,input_no_cache,0.53
+2024-05-17,Claude 3 Opus,,message,output,0.27
+2024-05-20,Claude 3 Opus,,message,input_no_cache,31.10
+2024-05-20,Claude 3 Opus,,message,output,5.35
+2024-05-23,Claude 3 Opus,,message,input_no_cache,3.20
+2024-05-23,Claude 3 Opus,,message,output,4.37
+2024-05-25,Claude 3 Haiku,,message,input_no_cache,0.00
+2024-05-25,Claude 3 Haiku,,message,output,0.00
+2024-05-25,Claude 3 Opus,,message,input_no_cache,4.37
+2024-05-25,Claude 3 Opus,,message,output,1.84
+2024-05-25,Claude 3 Sonnet,,message,input_no_cache,31.72
+2024-05-25,Claude 3 Sonnet,,message,output,2.40
+2024-05-26,Claude 3 Opus,,message,input_no_cache,19.08
+2024-05-26,Claude 3 Opus,,message,output,2.04
+2024-05-27,Claude 3 Opus,,message,input_no_cache,0.16
+2024-05-27,Claude 3 Opus,,message,output,0.25
+2024-05-27,Claude 3 Sonnet,,message,input_no_cache,6.01
+2024-05-27,Claude 3 Sonnet,,message,output,1.68
+2024-05-29,Claude 3 Opus,,message,input_no_cache,0.00
+2024-05-29,Claude 3 Opus,,message,output,0.00
+2024-05-30,Claude 3 Opus,,message,input_no_cache,1.69
+2024-05-30,Claude 3 Opus,,message,output,0.22
+2024-05-30,Claude 3 Sonnet,,message,input_no_cache,3.23
+2024-05-30,Claude 3 Sonnet,,message,output,0.44
+2024-05-31,Claude Instant,,message,input_no_cache,0.00
+2024-05-31,Claude Instant,,message,output,0.00

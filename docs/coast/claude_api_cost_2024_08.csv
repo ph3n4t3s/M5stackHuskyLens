@@ -1,0 +1,11 @@
+usage_date_utc,model,workspace,api_key,usage_type,token_type,cost_usd
+2024-08-08,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.16
+2024-08-08,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.05
+2024-08-11,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.72
+2024-08-11,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.19
+2024-08-23,Claude Instant,,1M7,message,input_no_cache,0.00
+2024-08-23,Claude Instant,,1M7,message,output,0.00
+2024-08-23,Claude Instant,,1M4,message,input_no_cache,0.00
+2024-08-23,Claude Instant,,1M4,message,output,0.00
+2024-08-30,Claude Instant,,1M4,message,input_no_cache,0.00
+2024-08-30,Claude Instant,,1M4,message,output,0.00

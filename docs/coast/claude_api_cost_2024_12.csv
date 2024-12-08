@@ -1,0 +1,5 @@
+usage_date_utc,model,workspace,api_key,usage_type,token_type,cost_usd
+2024-12-07,Claude 3.5 Sonnet 2024-10-22,,Stéphane,message,input_no_cache,0.00
+2024-12-07,Claude 3.5 Sonnet 2024-10-22,,Stéphane,message,input_cache_write,3.57
+2024-12-07,Claude 3.5 Sonnet 2024-10-22,,Stéphane,message,input_cache_read,5.20
+2024-12-07,Claude 3.5 Sonnet 2024-10-22,,Stéphane,message,output,3.17

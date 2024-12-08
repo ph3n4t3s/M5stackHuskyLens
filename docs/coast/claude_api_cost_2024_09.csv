@@ -1,0 +1,41 @@
+usage_date_utc,model,workspace,api_key,usage_type,token_type,cost_usd
+2024-09-05,Claude 3 Opus,,2M5,message,input_no_cache,0.31
+2024-09-05,Claude 3 Opus,,2M5,message,output,0.06
+2024-09-05,Claude Instant,,2M5,message,input_no_cache,0.00
+2024-09-05,Claude Instant,,2M5,message,output,0.00
+2024-09-06,Claude Instant,,1M7,message,input_no_cache,0.00
+2024-09-06,Claude Instant,,1M7,message,output,0.00
+2024-09-06,Claude Instant,,1M4,message,input_no_cache,0.00
+2024-09-06,Claude Instant,,1M4,message,output,0.00
+2024-09-09,Claude 3 Opus,,leprof-secret-key,message,input_no_cache,0.08
+2024-09-09,Claude 3 Opus,,leprof-secret-key,message,output,0.01
+2024-09-09,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.03
+2024-09-09,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.03
+2024-09-11,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.00
+2024-09-11,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
+2024-09-12,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.02
+2024-09-12,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-13,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-13,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
+2024-09-13,Claude Instant,,1M4,message,input_no_cache,0.00
+2024-09-13,Claude Instant,,1M4,message,output,0.00
+2024-09-14,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-14,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-16,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.10
+2024-09-16,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.02
+2024-09-17,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-17,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-19,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-19,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-21,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.04
+2024-09-21,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
+2024-09-22,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.04
+2024-09-22,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
+2024-09-23,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-23,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-24,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.01
+2024-09-24,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.00
+2024-09-25,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.03
+2024-09-25,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
+2024-09-26,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,input_no_cache,0.03
+2024-09-26,Claude 3.5 Sonnet 2024-06-20,,leprof-secret-key,message,output,0.01
