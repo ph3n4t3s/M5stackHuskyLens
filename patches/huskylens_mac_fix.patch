@@ -1,0 +1,21 @@
+diff --git a/src/HUSKYLENS.h b/src/HUSKYLENS.h
+index xxxx..xxxx 100644
+--- a/src/HUSKYLENS.h
++++ b/src/HUSKYLENS.h
+@@ -168,7 +168,7 @@ private:
+     bool processReturn()
+     {
+         if (protocolInfo.protocolSize)
+-            protocolPtr = (Protocol_t*) realloc(protocolPtr, max(protocolInfo.protocolSize, 1) * sizeof(Protocol_t));
++            protocolPtr = (Protocol_t*) realloc(protocolPtr, ((protocolInfo.protocolSize > 1) ? protocolInfo.protocolSize : 1) * sizeof(Protocol_t));
+         else
+             protocolPtr = (Protocol_t*) realloc(protocolPtr, sizeof(Protocol_t));
+ 
+@@ -294,7 +294,7 @@ public:
+         int result = (protocolReadIndex < 1) ? 0 : protocolReadIndex;
+         protocolReadIndex = 0;
+         currentIndex = 0;
+-        currentIndex = min(currentIndex, result);
++        currentIndex = (currentIndex < result) ? currentIndex : result;
+         return result;
+     }
