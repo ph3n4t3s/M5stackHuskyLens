@@ -1,0 +1,81 @@
+site_name: M5Stack HuskyLens Documentation
+site_description: Documentation complète du projet M5Stack HuskyLens
+site_author: ph3n4t3s
+repo_url: https://github.com/ph3n4t3s/M5stackHuskyLens
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+  language: fr
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.tilde
+
+nav:
+  - Accueil: index.md
+  - Démarrage:
+    - Installation: getting-started/installation.md
+    - Premier pas: getting-started/first-steps.md
+    - Dépannage: getting-started/troubleshooting.md
+  - Guide Utilisateur:
+    - Utilisation basique: user-guide/basic-usage.md
+    - Fonctionnalités avancées: user-guide/advanced.md
+    - Maintenance: user-guide/maintenance.md
+  - Documentation Technique:
+    - Architecture: technical/architecture.md
+    - Protocoles: technical/protocols.md
+    - API Reference: technical/api-ref.md
+  - Développement:
+    - Configuration: development/setup.md
+    - Contribution: development/contributing.md
+    - Tests: development/testing.md
+  - Référence:
+    - Matériel: reference/hardware.md
+    - Brochage: reference/pinout.md
+    - Glossaire: reference/glossary.md
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
