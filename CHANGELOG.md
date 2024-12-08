@@ -4,6 +4,27 @@
 ### Added
 - Support complet pour macOS M2
 - Amélioration majeure du système de build
+- Documentation technique détaillée
+- Interface de mise à jour intégrée
+- Nouveau système de compilation automatisé
+
+### Changed
+- Refonte complète de la documentation
+- Restructuration des dossiers du projet
+- Amélioration de la gestion des erreurs
+- Mise à jour du système de build
+- Optimisation de la compilation sur M1/M2
+
+### Fixed
+- Correction des problèmes de compilation sur macOS M2
+- Résolution des conflits de types dans HuskyLens
+- Correction des problèmes de chemins
+- Amélioration de la stabilité générale
+
+## [1.1.0] - 2024-12-08
+### Added
+- Support complet pour macOS M2
+- Amélioration majeure du système de build
 - Interface de mise à jour intégrée
 
 ### Changed
