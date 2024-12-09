@@ -1,6 +1,6 @@
 # M5Stack HuskyLens
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/ph3n4t3s/M5stackHuskyLens/releases)
+[![Version](https://img.shields.io/badge/version-2.0.2-blue.svg)](https://github.com/ph3n4t3s/M5stackHuskyLens/releases)
 [![Coût total](https://img.shields.io/badge/co%C3%BBt%20total-$574.63-green.svg)](docs/coast/README.md)
 [![Période](https://img.shields.io/badge/p%C3%A9riode-Mar%202024--Dec%202024-lightgrey.svg)](docs/coast/README.md)
 
@@ -30,23 +30,43 @@ M5Stack HuskyLens est une solution complète de vision par ordinateur combinant 
 - Python 3.8+
 - Git
 
+## État du Projet
+
+⚠️ **Note Importante** : Ce projet est en développement actif. Consultez le [Journal de Progression](docs/dev/PROGRESS_LOG.md) pour l'état actuel.
+
 ## Installation rapide
 
 1. Cloner le dépôt :
-\`\`\`bash
+```bash
 git clone https://github.com/ph3n4t3s/M5stackHuskyLens.git
 cd M5stackHuskyLens
-\`\`\`
+```
 
-2. Installer les dépendances :
-\`\`\`bash
-pio pkg install
-\`\`\`
+2. Installer les dépendances spécifiques :
+```bash
+# Dépendances requises
+pio pkg install "m5stack/M5CoreS3@^1.0.0"
+pio pkg install "m5stack/M5Unified@^0.2.1"
+pio pkg install "huskylens/HuskyLens@^1.0.0"
+pio pkg install "bblanchon/ArduinoJson@^6.21.5"
+pio pkg install "fastled/FastLED@^3.9.4"
+pio pkg install "plerup/EspSoftwareSerial@^8.2.0"
+pio pkg install "lorol/LittleFS_esp32@^1.0.6"
+```
 
-3. Compiler et uploader :
-\`\`\`bash
-pio run -t upload
-\`\`\`
+3. Compiler le projet :
+```bash
+# Pour le développement
+pio run -e development
+
+# Pour la production
+pio run -e release
+```
+
+4. Uploader sur le M5Stack :
+```bash
+pio run -t upload -e development
+```
 
 ## Configuration
 
@@ -61,7 +81,9 @@ pio run -t upload
 
 ## Documentation
 
-- [Spécifications techniques complètes](docs/TECHNICAL_SPECIFICATIONS.md)
+- [Spécifications techniques V2](docs/TECHNICAL_SPECIFICATIONS_V2.md)
+- [Journal de Progression](docs/dev/PROGRESS_LOG.md)
+- [Problèmes Connus](docs/KNOWN_ISSUES.md)
 - [Notes de version](CHANGELOG.md)
 
 ## Support des plateformes
