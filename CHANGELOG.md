@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.1] - 2024-12-09 [UNRELEASED]
+
+### Known Issues
+- [#1] Build system issues with ESP Async WebServer dependency
+  - Compilation fails due to missing includes
+  - AsyncWebServer version conflicts
+  - High CPU/memory usage during builds
+  
+- [#2] Code Structure Issues
+  - SensorData structure not properly recognized across files
+  - Inconsistent namespace usage for display constants
+  - Need for better header organization
+  - Memory/CPU intensive compilation process
+
+### Changed
+- Updated dependency management in platformio.ini
+- Refactored namespaces in ImageProcessor
+- Added WebServer adapter layer
+- Documentation improvements
+
+### Technical Details
+- Issue with ESPAsyncWebServer-esphome vs ESPAsyncWebServer
+- SensorData type visibility problems across compilation units
+- Constants namespace inconsistency (direct vs qualified access)
+- Resource-intensive compilation affecting build times
+
 ## [2.0.0] - 2024-12-07
 ### Added
 - Interface utilisateur moderne et adaptative

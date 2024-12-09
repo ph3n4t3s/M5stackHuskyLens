@@ -3,7 +3,9 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "Config.h"
+#include "SensorData.h"
+#include "Types.h"
+#include "Constants.h"
 #include <FastLED.h>
 
 // Les filtres sont stockés comme des matrices 3x3

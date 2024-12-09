@@ -72,8 +72,8 @@ void DataProcessor::processDistanceData(const SensorData& data) {
     for (size_t i = 0; i < data.points.size(); i++) {
         const Point& p = data.points[i];
         
-        float screenDistance = sqrt(pow(p.x - Constants::SCREEN_WIDTH/2.0f, 2) + 
-                                 pow(p.y - Constants::SCREEN_HEIGHT/2.0f, 2));
+        float screenDistance = sqrt(pow(p.x - Constants::Display::SCREEN_WIDTH/2.0f, 2) + 
+                                 pow(p.y - Constants::Display::SCREEN_HEIGHT/2.0f, 2));
         
         float distance = screenDistance * CALIBRATION_FACTOR;
         
@@ -121,7 +121,7 @@ void DataProcessor::processStandardData(const SensorData& data) {
 }
 
 void DataProcessor::updateHistory(const SensorData& data) {
-    if (history.size() >= Constants::MAX_HISTORY) {
+    if (history.size() >= Constants::History::MAX_HISTORY) {
         history.pop_front();
     }
     

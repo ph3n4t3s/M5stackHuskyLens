@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ESPAsyncWebSrv.h>
+#include "WebServer.h"
 #include "../performance/PerformanceManager.h"
 
 class PerformanceRoutes {

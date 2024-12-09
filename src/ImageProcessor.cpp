@@ -2,6 +2,11 @@
 #include <cstring>
 #include <cmath>
 
+namespace {
+    using Constants::Display::SCREEN_WIDTH;
+    using Constants::Display::SCREEN_HEIGHT;
+}
+
 bool ImageProcessor::begin() {
     setupDefaultFilters();
     return true;
@@ -65,8 +70,8 @@ void ImageProcessor::applyKernel(const float kernel[3][3], float factor, float b
     if (processedImage.empty()) return;
 
     std::vector<uint8_t> temp = processedImage;
-    int width = Constants::SCREEN_WIDTH;
-    int height = Constants::SCREEN_HEIGHT;
+    int width = SCREEN_WIDTH;
+    int height = SCREEN_HEIGHT;
 
     for (int y = 1; y < height-1; y++) {
         for (int x = 1; x < width-1; x++) {
@@ -86,16 +91,16 @@ void ImageProcessor::applyKernel(const float kernel[3][3], float factor, float b
 
 void ImageProcessor::processImage(SensorData& data) {
     // Créer une image en niveaux de gris à partir des données
-    processedImage.resize(Constants::SCREEN_WIDTH * Constants::SCREEN_HEIGHT);
+    processedImage.resize(SCREEN_WIDTH * SCREEN_HEIGHT);
     
     // Initialiser avec des pixels blancs
     std::fill(processedImage.begin(), processedImage.end(), 255);
     
     // Dessiner les points détectés en noir
     for (const auto& point : data.points) {
-        if (point.x >= 0 && point.x < Constants::SCREEN_WIDTH &&
-            point.y >= 0 && point.y < Constants::SCREEN_HEIGHT) {
-            processedImage[point.y * Constants::SCREEN_WIDTH + point.x] = 0;
+        if (point.x >= 0 && point.x < SCREEN_WIDTH &&
+            point.y >= 0 && point.y < SCREEN_HEIGHT) {
+            processedImage[point.y * SCREEN_WIDTH + point.x] = 0;
         }
     }
     
@@ -155,6 +160,9 @@ void ImageProcessor::stabilizeMotion() {
 }
 
 std::vector<Point> ImageProcessor::detectHarrisCorners() const {
+    using Constants::Display::SCREEN_WIDTH;
+    using Constants::Display::SCREEN_HEIGHT;
+    
     std::vector<Point> corners;
     if (processedImage.empty()) return corners;
 
@@ -234,6 +242,9 @@ std::vector<std::vector<Point>> ImageProcessor::detectContours() const {
 }
 
 std::vector<Point> ImageProcessor::detectEdges() const {
+    using Constants::Display::SCREEN_WIDTH;
+    using Constants::Display::SCREEN_HEIGHT;
+    
     std::vector<Point> edges;
     if (processedImage.empty()) return edges;
 
@@ -265,6 +276,9 @@ std::vector<Point> ImageProcessor::detectEdges() const {
 }
 
 float ImageProcessor::calculateBlurriness() const {
+    using Constants::Display::SCREEN_WIDTH;
+    using Constants::Display::SCREEN_HEIGHT;
+    
     if (processedImage.empty()) return 0.0f;
 
     float totalVariance = 0.0f;

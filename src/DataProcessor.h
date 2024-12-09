@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Config.h"
+#include "SensorData.h"
+#include "DisplayData.h"
 #include <vector>
 #include <deque>
 
@@ -16,6 +18,7 @@ private:
     std::deque<HistoricalData> history;
     DisplayData displayData;
     HuskyMode currentMode;
+    std::vector<Point> lastPositions;
     
     void processGestureData(const SensorData& data);
     void processDistanceData(const SensorData& data);

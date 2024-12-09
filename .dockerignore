@@ -1,0 +1,17 @@
+.pio/
+.git/
+.github/
+.vscode/
+output/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.venv
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+docs/_build/

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workspace
+      - platformio_cache:/root/.platformio
+    environment:
+      - PLATFORMIO_CORE_DIR=/root/.platformio
+    command: build
+
+volumes:
+  platformio_cache:

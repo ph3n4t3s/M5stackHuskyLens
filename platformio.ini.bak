@@ -1,21 +1,13 @@
-[env]
+[env:esp32-s3-dev]
 platform = espressif32
-framework = arduino
 board = esp32-s3-devkitc-1
+framework = arduino
 monitor_speed = 115200
 
-lib_deps_common = 
-    ricmoo/QRCode@^0.0.1
+lib_deps = 
+        ricmoo/QRCode@^0.0.1
     m5stack/M5CoreS3
     huskylens/HuskyLens
-    m5stack/M5Unified
-    ottowinter/ESPAsyncWebServer-esphome
-    ottowinter/AsyncTCP-esphome
-    bblanchon/ArduinoJson @ ^6.21.3
-    fastled/FastLED @ ^3.6.0
-
-[env:esp32-s3-dev]
-lib_deps = ${env.lib_deps_common}
 
 build_flags = 
     -DCORE_DEBUG_LEVEL=5
@@ -31,13 +23,9 @@ framework = arduino
 monitor_speed = 115200
 
 lib_deps = 
-    ricmoo/QRCode@^0.0.1
+        ricmoo/QRCode@^0.0.1
     m5stack/M5CoreS3
     huskylens/HuskyLens
-    m5stack/M5Unified
-    ottowinter/ESPAsyncWebServer-esphome
-    me-no-dev/AsyncTCP
-    bblanchon/ArduinoJson @ ^6.21.3
     throwtheswitch/Unity
 
 build_flags = 
