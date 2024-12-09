@@ -66,14 +66,21 @@ nav:
     - Architecture: technical/architecture.md
     - Protocoles: technical/protocols.md
     - API Reference: technical/api-ref.md
+    - Spécifications V2: TECHNICAL_SPECIFICATIONS_V2.md
   - Développement:
     - Configuration: development/setup.md
     - Contribution: development/contributing.md
     - Tests: development/testing.md
+    - Journal de Progression: dev/PROGRESS_LOG.md
+    - Problèmes Connus: KNOWN_ISSUES.md
   - Référence:
     - Matériel: reference/hardware.md
     - Brochage: reference/pinout.md
     - Glossaire: reference/glossary.md
+  - À propos:
+    - Changelog: ../CHANGELOG.md
+    - Contribution: ../CONTRIBUTING.md
+    - Licence: ../LICENSE
 
 plugins:
   - search

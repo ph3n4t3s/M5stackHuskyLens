@@ -1,5 +1,23 @@
 # Documentation M5Stack HuskyLens
 
+![Version](https://img.shields.io/badge/version-2.0.2-blue.svg)
+![Build](https://img.shields.io/badge/build-in%20progress-yellow.svg)
+![Documentation](https://img.shields.io/badge/docs-updating-blue.svg)
+
+## ⚠️ État Actuel du Projet
+
+Le projet est en phase active de développement. Avant de commencer :
+
+1. Consultez le [Journal de Progression](dev/PROGRESS_LOG.md) pour connaître l'état actuel
+2. Vérifiez les [Problèmes Connus](KNOWN_ISSUES.md) pour les limitations actuelles
+3. Suivez les [Instructions de Contribution](../CONTRIBUTING.md) pour participer
+
+### Dernières Mises à Jour (7 décembre 2024)
+- Réorganisation complète de la structure du projet
+- Mise à jour des dépendances et versions
+- Amélioration de la documentation technique
+- Correction des problèmes de compilation
+
 ## Guide de la Documentation
 
 Cette documentation est organisée en plusieurs sections pour répondre aux besoins des différents utilisateurs :

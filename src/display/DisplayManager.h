@@ -1,8 +1,8 @@
 #pragma once
 
 #include <M5CoreS3.h>
-#include "../core/Constants.h"
-#include "../core/Types.h"
+#include "../Constants.h"
+#include "../Types.h"
 
 class DisplayManager {
 public:
@@ -24,6 +24,13 @@ public:
     uint8_t getBrightness() const { return brightness; }
     uint8_t getTextSize() const { return textSize; }
     
+    // Méthodes pour l'interface utilisateur
+    void showQRCode(bool show);
+    void setMode(DisplayMode mode);
+    void showError(const String& message, bool recoverable);
+    void showBootSequence(const String& message);
+    void generateWifiQR(const char* ssid, const char* password);
+    
 private:
     bool initialized;
     uint8_t brightness;
@@ -32,5 +39,4 @@ private:
     // Utilitaires
     int calculateTextWidth(const String& text) const;
     void updateBrightness();
-};
 };

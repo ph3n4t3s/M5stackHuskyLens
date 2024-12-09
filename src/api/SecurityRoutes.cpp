@@ -1,7 +1,7 @@
 #include "SecurityRoutes.h"
 #include <ArduinoJson.h>
 
-void SecurityRoutes::registerRoutes(AsyncWebServer& server, SecurityManager& securityManager) {
+void SecurityRoutes::registerRoutes(WebServer::IRouter& router, SecurityManager& securityManager) {
     // Points d'entrée API sécurité
     server.on("/api/security/config", HTTP_GET, 
         [&](AsyncWebServerRequest* request) {

@@ -1,8 +1,11 @@
 #include <M5CoreS3.h>
-#include "DisplayManager.h"
-#include "ConfigManager.h"
-#include "BootManager.h"
-#include "HUSKYLENS.h"
+#include "display/DisplayManager.h"
+#include "system/ConfigManager.h"
+#include "system/BootManager.h"
+#include <HUSKYLENS.h>
+#include <Wire.h>
+#include <WiFi.h>
+#include "Types.h"
 
 // Instances globales
 DisplayManager display;

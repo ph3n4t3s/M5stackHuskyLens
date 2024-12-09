@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.2] - 2024-12-07
+
+### Ajouté
+- Journal de progression du développement détaillé
+- Documentation des problèmes connus
+- Structure de base révisée du projet
+- Système de configuration initial amélioré
+
+### Corrigé
+- Chemins d'inclusion dans main.cpp
+- Structure des fichiers d'en-tête
+- Organisation des dépendances dans platformio.ini
+- Configuration de la compilation pour différents environnements
+
+### Modifié
+- Réorganisation des fichiers sources
+- Mise à jour des versions des dépendances
+- Documentation du projet enrichie
+- Nouvelle structure de documentation technique
+
+### En cours
+- Tests et validation de la compilation
+- Implémentation des fonctionnalités de base
+- Organisation des tests unitaires
+- Optimisation du processus de build
+
 ## [2.0.1] - 2024-12-09 [UNRELEASED]
 
 ### Known Issues

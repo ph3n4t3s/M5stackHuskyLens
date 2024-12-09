@@ -4,6 +4,16 @@
 #include "Constants.h"
 #include <vector>
 
+// Étapes de démarrage
+enum class BootStage {
+    INIT,
+    HARDWARE_CHECK,
+    WIFI_SETUP,
+    HUSKYLENS_INIT,
+    COMPLETE,
+    ERROR
+};
+
 // Structure de point 2D
 struct Point {
     int x;
@@ -58,12 +68,13 @@ enum class SystemState {
 
 // Mode d'affichage
 enum class DisplayMode {
-    BOOT_SEQUENCE,    // Séquence de démarrage
-    MAIN,            // Interface principale
-    MENU,            // Menu principal
-    SETTINGS,        // Paramètres
-    QR_CODE,         // Affichage QR code
-    ERROR            // Message d'erreur
+    BOOT_SEQUENCE,       // Séquence de démarrage
+    NORMAL_OPERATION,    // Fonctionnement normal
+    MAIN,               // Interface principale
+    MENU,               // Menu principal
+    SETTINGS,           // Paramètres
+    QR_CODE,            // Affichage QR code
+    ERROR               // Message d'erreur
 };
 
 // Mode de reconnaissance HuskyLens
@@ -124,13 +135,15 @@ struct SystemConfig {
     String deviceName;
     uint8_t volume;
     bool debugMode;
+    bool firstBoot;
     DisplayConfig display;
     WiFiConfig wifi;
     
     SystemConfig() :
         deviceName("M5HuskyLens"),
         volume(128),
-        debugMode(false) {}
+        debugMode(false),
+        firstBoot(true) {}
 };
 
 // État du matériel
