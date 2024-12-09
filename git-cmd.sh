@@ -8,7 +8,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Variables fixes
-USERNAME="ph3nat3s"
+USERNAME="ph3n4t3s"
 TOKEN="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"
 REPO_URL="https://github.com/ph3n4t3s/M5stackHuskyLens.git"  # Remplacez par l'URL de votre dépôt
 REPO_PATH="/home/computeruse/M5stackHuskyLens"  # Chemin local où le dépôt sera cloné ou mis à jour
